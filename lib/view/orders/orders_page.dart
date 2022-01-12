@@ -20,12 +20,11 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
   bool _loading = false;
 
   Future<void> _onRefresh() async {
-    var _duration = const Duration(seconds: 3);
+    var _duration = const Duration(seconds: 2);
 
     if (mounted) {
       setState(() => _loading = true);
