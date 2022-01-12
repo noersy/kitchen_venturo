@@ -167,78 +167,143 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                            left: SpaceDims.sp14,
-                            right: SpaceDims.sp14,
+                            left: SpaceDims.sp18,
+                            right: SpaceDims.sp18,
                             top: SpaceDims.sp12,
                             bottom: SpaceDims.sp8,
                           ),
-                          child: Row(
+                          child: Stack(
+                            alignment: Alignment.center,
                             children: [
-                              const Icon(
-                                Icons.check_circle,
-                                color: ColorSty.primary,
+                              const Positioned(
+                                width: 90,
+                                top: 3.5,
+                                left: 50,
+                                child: Divider(thickness: 2),
                               ),
-                              const SizedBox(width: SpaceDims.sp8),
-                              const Expanded(child: Divider(thickness: 2)),
-                              const SizedBox(width: SpaceDims.sp8),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                  height: 10,
-                                  width: 10,
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      color: ColorSty.grey,
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
+                              const Positioned(
+                                width: 90,
+                                top: 3.5,
+                                right: 50,
+                                child: Divider(thickness: 2),
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: const [
+                                        Icon(
+                                          Icons.check_circle,
+                                          color: ColorSty.primary,
+                                        ),
+                                        SizedBox(height: SpaceDims.sp4),
+                                        SizedBox(
+                                          width: 60,
+                                          child: Text(
+                                            "Pesanan diterima",
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(width: SpaceDims.sp8),
-                              const Expanded(child: Divider(thickness: 2)),
-                              const SizedBox(width: SpaceDims.sp8),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                  height: 10,
-                                  width: 10,
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      color: ColorSty.grey,
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
+                                  const Expanded(child: Divider(thickness: 0)),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                          barrierColor: ColorSty.grey.withOpacity(0.2),
+                                          context: context,
+                                          builder: (_) =>
+                                              UpdateStatusDialog(
+                                                onPressed: (){},
+                                                title: "Update Status",
+                                                iconData: Icons.update,
+                                                caption: "Apakah anda yakin akan\nmengubah status Pesan ini",
+                                                textButton: "Oke",
+                                              ),
+                                        );
+                                      },
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: SpaceDims.sp8),
+                                          SizedBox(
+                                            height: 10,
+                                            width: 10,
+                                            child: DecoratedBox(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius: BorderRadius.circular(100.0),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: SpaceDims.sp6),
+                                          const Padding(
+                                            padding: EdgeInsets.all(SpaceDims.sp2),
+                                            child: SizedBox(
+                                              width: 60,
+                                              child: Text(
+                                                "Silahkan Ambil",
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  const Expanded(child: Divider(thickness: 0)),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        showDialog(
+                                          barrierColor: ColorSty.grey.withOpacity(0.2),
+                                          context: context,
+                                          builder: (_) =>
+                                              UpdateStatusDialog(
+                                                onPressed: (){},
+                                                title: "Update Status",
+                                                iconData: Icons.update,
+                                                caption: "Apakah anda yakin akan\nmengubah status Pesan ini",
+                                                textButton: "Oke",
+                                              ),
+                                        );
+                                      },
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: SpaceDims.sp8),
+                                          SizedBox(
+                                            height: 10,
+                                            width: 10,
+                                            child: DecoratedBox(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius:
+                                                    BorderRadius.circular(100.0),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: SpaceDims.sp6),
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.all(SpaceDims.sp2),
+                                            child: SizedBox(
+                                              width: 80,
+                                              child: Text(
+                                                "Pesanan Selesai",
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: SpaceDims.sp8),
                             ],
                           ),
-                        ),
-                        Row(
-                          children: const [
-                            SizedBox(
-                              width: 80,
-                              child: Text("Pesanan diterima"),
-                            ),
-                            Expanded(child: Divider(color: Colors.transparent)),
-                            SizedBox(
-                              width: 80,
-                              child: Text(
-                                "Silahkan Ambil",
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            Expanded(child: Divider(color: Colors.transparent)),
-                            SizedBox(
-                              width: 80,
-                              child: Text(
-                                "Pesanan Selesai",
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
                         ),
                       ],
                     ),
@@ -248,6 +313,86 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class UpdateStatusDialog extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String textButton, caption, title;
+  final IconData iconData;
+  const UpdateStatusDialog({Key? key, required this.onPressed, required this.textButton, required this.caption, required this.title, required this.iconData,}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            top: 8.0,
+            right: 8.0,
+            child: TextButton(
+              onPressed: () => Navigator.pop(context),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(SpaceDims.sp4),
+                primary: ColorSty.white,
+                backgroundColor: Colors.redAccent,
+                minimumSize: const Size(0, 0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100.0),
+                ),
+              ),
+              child: const Icon(Icons.clear),
+            ),
+          ),
+          SizedBox(
+            height: 290,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  iconData,
+                  size: 110,
+                  color: ColorSty.primary,
+                ),
+                Text(
+                  title,
+                  style: TypoSty.title.copyWith(fontSize: 23.0),
+                ),
+                const SizedBox(height: SpaceDims.sp4),
+                Text(
+                  caption,
+                  textAlign: TextAlign.center,
+                  style: TypoSty.caption
+                      .copyWith(fontSize: 14.0, color: ColorSty.black60),
+                ),
+                const SizedBox(height: SpaceDims.sp12),
+                TextButton(
+                  onPressed: onPressed,
+                  style: TextButton.styleFrom(
+                    primary: ColorSty.white,
+                    backgroundColor: ColorSty.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)
+                    )
+                  ),
+                  child: SizedBox(
+                    width: 120.0,
+                      child: Align(
+                        alignment: Alignment.center,
+                          child: Text(textButton),
+                      ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

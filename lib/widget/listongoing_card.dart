@@ -1,18 +1,20 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
 
-class ListOrderOngoing extends StatelessWidget {
+import '../view/orders/ongoingorder_page.dart';
 
+class ListOrderOngoing extends StatelessWidget {
   final String type, title;
   final List<dynamic> orders;
+
   const ListOrderOngoing({
     Key? key,
     required this.type,
-    required this.title, required this.orders,
+    required this.title,
+    required this.orders,
   }) : super(key: key);
 
   @override
@@ -20,14 +22,16 @@ class ListOrderOngoing extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: SpaceDims.sp22),
-        if(orders.where((element) => element["type"] == type).isEmpty)
+        if (orders.where((element) => element["type"] == type).isEmpty)
           Padding(
-            padding: const EdgeInsets.only(left: SpaceDims.sp24),
+            padding: const EdgeInsets.only(left: SpaceDims.sp18),
             child: Row(
               children: [
                 type.compareTo("makanan") == 0
-                    ? SvgPicture.asset("assert/image/icons/ep_food.svg", height: 22)
-                    : SvgPicture.asset("assert/image/icons/ep_coffee.svg", height: 26),
+                    ? SvgPicture.asset("assert/image/icons/ep_food.svg",
+                        height: 22)
+                    : SvgPicture.asset("assert/image/icons/ep_coffee.svg",
+                        height: 26),
                 const SizedBox(width: SpaceDims.sp4),
                 Text(
                   title,
@@ -53,7 +57,6 @@ class ListOrderOngoing extends StatelessWidget {
     );
   }
 }
-
 
 class CardMenuOngoing extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -86,7 +89,8 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: SpaceDims.sp8, vertical: SpaceDims.sp2),
+      padding: const EdgeInsets.symmetric(
+          horizontal: SpaceDims.sp18, vertical: SpaceDims.sp2),
       child: Card(
         elevation: 4,
         color: ColorSty.white80,
@@ -94,15 +98,7 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: TextButton(
-          onPressed: (){
-            //
-            // Navigate.toEditOrderMenu(
-            //     context,
-            //     data: widget.data,
-            //     countOrder: _jumlahOrder
-            // );
-
-          },
+          onPressed: null,
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
@@ -150,11 +146,10 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
                           child: Text(
                             "Level 1 - Pakai Keju - Nasinya ....",
                             style: TypoSty.caption2.copyWith(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12.0,
-                              color: ColorSty.grey,
-                              overflow: TextOverflow.ellipsis
-                            ),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.0,
+                                color: ColorSty.grey,
+                                overflow: TextOverflow.ellipsis),
                           ),
                         ),
                       ],
@@ -162,55 +157,44 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
                   ],
                 ),
               ),
-              if (amount != 0)
-                Expanded(
-                  flex: 4,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      if (_jumlahOrder != 0)
-                        TextButton(
-                          onPressed: () {
-                            // setState(() => _jumlahOrder--)
-                          },
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            minimumSize: const Size(25, 25),
-                            side: const BorderSide(
-                              color: ColorSty.primary, width: 2,
-                            ),
+              Expanded(
+                flex: 4,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (_jumlahOrder != 0)
+                      Text("$_jumlahOrder",
+                          style: TypoSty.subtitle.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20.0,
+                              color: ColorSty.black60),
+                      ),
+                    TextButton(
+                      onPressed: () {
+                        showDialog(
+                          barrierColor: ColorSty.grey.withOpacity(0.2),
+                          context: context,
+                          builder: (_) => UpdateStatusDialog(
+                            onPressed: () {},
+                            textButton: "Hapus",
+                            title: "Hapus Item",
+                            iconData: Icons.update,
+                            caption:
+                                "Apakah anda yakin akan\nmenghapus item tersbut",
                           ),
-                          child: const Icon(Icons.remove),
-                        ),
-                      if (_jumlahOrder != 0)
-                        Text("$_jumlahOrder", style: TypoSty.subtitle),
-                      TextButton(
-                        onPressed: (){
-                           // setState(() => _jumlahOrder++);
-                        },
-                        style: TextButton.styleFrom(
+                        );
+                      },
+                      style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(25, 25),
-                          primary: ColorSty.white,
-                          backgroundColor: ColorSty.primary,
-                        ),
-                        child: const Icon(Icons.add, color: ColorSty.white),
-                      )
-                    ],
-                  ),
-                )
-              else
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    alignment: Alignment.bottomRight,
-                    height: 70,
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: SpaceDims.sp12),
-                    child: Text("Stok Habis",
-                      style: TypoSty.caption.copyWith(color: ColorSty.grey,),),
-                  ),
-                )
+                          primary: ColorSty.primary,
+                          backgroundColor: Colors.transparent,
+                          side: const BorderSide(color: ColorSty.primary)),
+                      child: const Icon(Icons.clear),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ),

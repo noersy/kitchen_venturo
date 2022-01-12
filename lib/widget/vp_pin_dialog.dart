@@ -83,8 +83,7 @@ class _VPinDialogState extends State<VPinDialog> {
                           if (widget.onComplete != null) widget.onComplete!(null);
                           showDialog(
                             context: context,
-                            builder: (_) =>
-                                OrderDoneDialog(voucher: widget.voucher),
+                            builder: (_) => OrderDoneDialog(voucher: widget.voucher),
                           );
                         },
                         separator: Padding(
