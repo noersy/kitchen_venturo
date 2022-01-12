@@ -259,7 +259,7 @@ class SkeletonOrderMenuCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Container(
-            height: 138,
+            height: 100,
             width: double.infinity,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(
@@ -269,8 +269,8 @@ class SkeletonOrderMenuCard extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  width: 120,
-                  height: 120,
+                  width: 90,
+                  height: 90,
                   margin: const EdgeInsets.all(SpaceDims.sp8),
                   decoration: BoxDecoration(
                     color: ColorSty.grey60,
@@ -311,7 +311,7 @@ class SkeletonOrderMenuCard extends StatelessWidget {
                         ),
                         const SizedBox(height: SpaceDims.sp14),
                         const SkeletonText(height: 26.0),
-                        const SizedBox(height: SpaceDims.sp24),
+                        const SizedBox(height: SpaceDims.sp8),
                         Row(
                           children: const [
                             SizedBox(
@@ -343,7 +343,7 @@ class SkeletonOrderMenuCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Container(
-            height: 138,
+            height: 100,
             width: double.infinity,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(
@@ -353,8 +353,8 @@ class SkeletonOrderMenuCard extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  width: 120,
-                  height: 120,
+                  width: 90,
+                  height: 90,
                   margin: const EdgeInsets.all(SpaceDims.sp8),
                   decoration: BoxDecoration(
                     color: ColorSty.grey60,
@@ -395,7 +395,7 @@ class SkeletonOrderMenuCard extends StatelessWidget {
                         ),
                         const SizedBox(height: SpaceDims.sp14),
                         const SkeletonText(height: 26.0),
-                        const SizedBox(height: SpaceDims.sp24),
+                        const SizedBox(height: SpaceDims.sp8),
                         Row(
                           children: const [
                             SizedBox(

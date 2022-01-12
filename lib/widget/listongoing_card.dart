@@ -89,8 +89,7 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: SpaceDims.sp18, vertical: SpaceDims.sp2),
+      padding: const EdgeInsets.symmetric(horizontal: SpaceDims.sp18, vertical: SpaceDims.sp2),
       child: Card(
         elevation: 4,
         color: ColorSty.white80,
