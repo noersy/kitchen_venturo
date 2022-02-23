@@ -9,7 +9,7 @@ import 'package:kitchen/widget/listmenu_tile.dart';
 import 'package:kitchen/widget/listongoing_card.dart';
 
 class OngoingOrderPage extends StatefulWidget {
-  final Map<String, dynamic> dataOrder;
+  final dataOrder;
 
   const OngoingOrderPage({Key? key, required this.dataOrder}) : super(key: key);
 
@@ -169,7 +169,8 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
                                         },
                                         title: "Update Status",
                                         iconData: Icons.update,
-                                        caption: "Apakah anda yakin akan\nmengubah status Pesan ini",
+                                        caption:
+                                            "Apakah anda yakin akan\nmengubah status Pesan ini",
                                         textButton: "Oke",
                                       ),
                                     );

@@ -12,6 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeleton_animation/skeleton_animation.dart';
 
+import '../../models/orderdetail.dart';
+
 class OrdersPage extends StatefulWidget {
   const OrdersPage({Key? key}) : super(key: key);
 
@@ -20,7 +22,22 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  OrderDetail? data;
+  bool _isLoading = false;
+  getListOrder() async {
+    if (mounted) setState(() => _loading = true);
+    await Provider.of<OrderProviders>(context, listen: false).getListOrder();
+    if (mounted) setState(() => _loading = false);
+  }
+
+  @override
+  void initState() {
+    getListOrder();
+    super.initState();
+  }
+
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   bool _loading = false;
 
   Future<void> _onRefresh() async {
@@ -58,67 +75,75 @@ class _OrdersPageState extends State<OrdersPage> {
             child: AnimatedBuilder(
               animation: OrderProviders(),
               builder: (BuildContext context, Widget? child) {
-                final _orderOngoing = [
-                  {
-                    "id": 1,
-                    "name" : "Shabil Alqorni",
-                    "orders": [
-                      {
-                        "id": 1,
-                        "jenis": "makanan",
-                        "image": "assert/image/menu/1637916792.png",
-                        "harga": "Rp 100",
-                        "amount": 99,
-                        "name": "Chicken Katsu",
-                        "countOrder": 2,
-                      }
-                    ],
-                    "voucher": {},
-                  }
-                ];
+                final _orderOngoing =
+                    Provider.of<OrderProviders>(context).listOrders;
+                // final _orderOngoing = [
+                //   {
+                //     "id": 1,
+                //     "name": "Shabil Alqorni",
+                //     "orders": [
+                //       {
+                //         "id": 1,
+                //         "jenis": "makanan",
+                //         "image": "assert/image/menu/1637916792.png",
+                //         "harga": "Rp 100",
+                //         "amount": 99,
+                //         "name": "Chicken Katsu",
+                //         "countOrder": 2,
+                //       }
+                //     ],
+                //     "voucher": {},
+                //   }
+                // ];
 
                 if (_orderOngoing.isNotEmpty) {
                   return _loading
-                        ? const SkeletonOrderMenuCard()
-                        : Column(
-                            children: [
-                              for (Map<String, dynamic> item in _orderOngoing)
-                                OrderMenuCard(
-                                  onPressed: () => Navigate.toViewOrder(
-                                    context,
-                                    dataOrders: item,
-                                  ),
-                                  date: "date",
-                                  harga: item["orders"][0]["harga"],
-                                  title: item["orders"][0]["name"],
-                                  urlImage: item["orders"][0]["image"],
+                      ? const SkeletonOrderMenuCard()
+                      : Column(
+                          children: [
+                            for (final item in _orderOngoing)
+                              OrderMenuCard(
+                                onPressed: () => Navigate.toViewOrder(
+                                  context,
+                                  dataOrders: item,
                                 ),
-                            ],
-                          );
+                                date: "date",
+                                // harga: item["orders"][0]["harga"],
+                                // title: item["orders"][0]["name"],
+                                // urlImage: item["orders"][0]["image"],
+
+                                harga: '10000',
+                                title: item.nama,
+                                jumlahMenu: item.menu.length,
+                                urlImage: "assert/image/menu/1637916792.png",
+                              ),
+                          ],
+                        );
                 } else {
                   return SizedBox(
                     height: MediaQuery.of(context).size.height - 200,
                     child: Stack(
-                          alignment: Alignment.center,
+                      alignment: Alignment.center,
+                      children: [
+                        Image.asset("assert/image/bg_findlocation.png"),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset("assert/image/bg_findlocation.png"),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                    IconsCs.order,
-                                    size: 120,
-                                    color: ColorSty.primary,
-                                ),
-                                const SizedBox(height: SpaceDims.sp22),
-                                Text("Sudah Pesan?\nLacak pesananmu\ndi sini.",
-                                    textAlign: TextAlign.center,
-                                    style: TypoSty.title2,
-                                ),
-                              ],
-                            )
+                            const Icon(
+                              IconsCs.order,
+                              size: 120,
+                              color: ColorSty.primary,
+                            ),
+                            const SizedBox(height: SpaceDims.sp22),
+                            Text(
+                              "Sudah Pesan?\nLacak pesananmu\ndi sini.",
+                              textAlign: TextAlign.center,
+                              style: TypoSty.title2,
+                            ),
                           ],
-                        ),
+                        )
+                      ],
+                    ),
                   );
                 }
               },
@@ -133,15 +158,16 @@ class _OrdersPageState extends State<OrdersPage> {
 class OrderMenuCard extends StatelessWidget {
   final String urlImage, title, date, harga;
   final VoidCallback onPressed;
-
-  const OrderMenuCard({
-    Key? key,
-    required this.urlImage,
-    required this.title,
-    required this.date,
-    required this.harga,
-    required this.onPressed,
-  }) : super(key: key);
+  final jumlahMenu;
+  const OrderMenuCard(
+      {Key? key,
+      required this.urlImage,
+      required this.title,
+      required this.date,
+      required this.harga,
+      required this.onPressed,
+      required this.jumlahMenu})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +249,7 @@ class OrderMenuCard extends StatelessWidget {
                           ),
                           const SizedBox(width: SpaceDims.sp24),
                           Text(
-                            "(3 Menu)",
+                            "($jumlahMenu Menu)",
                             style: TypoSty.mini.copyWith(
                               fontSize: 12.0,
                               color: ColorSty.grey,
@@ -279,7 +305,8 @@ class SkeletonOrderMenuCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: SpaceDims.sp12),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: SpaceDims.sp12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -363,7 +390,8 @@ class SkeletonOrderMenuCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: SpaceDims.sp12),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: SpaceDims.sp12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
