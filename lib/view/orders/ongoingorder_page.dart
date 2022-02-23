@@ -12,25 +12,26 @@ import 'package:provider/provider.dart';
 import '../../models/listorder.dart';
 import '../../providers/order_providers.dart';
 
-class OngoingOrderPage extends StatefulWidget {
+class DetailOrder extends StatefulWidget {
   final Order dataOrder;
 
-  const OngoingOrderPage({Key? key, required this.dataOrder}) : super(key: key);
+  const DetailOrder({Key? key, required this.dataOrder}) : super(key: key);
 
   @override
-  State<OngoingOrderPage> createState() => _OngoingOrderPageState();
+  State<DetailOrder> createState() => _DetailOrderState();
 }
 
-class _OngoingOrderPageState extends State<OngoingOrderPage> {
+class _DetailOrderState extends State<DetailOrder> {
   bool _loading = false;
   List<Menu> lDetailMenu = [];
   getListDetailMenu() async {
     if (mounted) setState(() => _loading = true);
     lDetailMenu =
         Provider.of<OrderProviders>(context, listen: false).listDetailMenu;
+    lDetailMenu.clear();
     for (var item in widget.dataOrder.menu) {
       lDetailMenu.add(item);
-      print('list detail menu: ${item.harga}');
+      print('list detail menu: ${item.foto}');
     }
     if (mounted) setState(() => _loading = false);
   }
@@ -59,20 +60,11 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
           children: [
             Column(
               children: [
-                // if (widget.dataOrder.menu.isNotEmpty)
                 ListOrderOngoing(
                   orders: lDetailMenu,
                   title: 'Makanan',
                   type: 'makanan',
                 ),
-                // if (widget.dataOrder["orders"]
-                //     .where((e) => e["jenis"] == "minuman")
-                //     .isNotEmpty)
-                //   ListOrderOngoing(
-                //     orders: widget.dataOrder["orders"],
-                //     title: 'Minuman',
-                //     type: 'minuman',
-                //   ),
               ],
             ),
             const SizedBox(height: SpaceDims.sp24),

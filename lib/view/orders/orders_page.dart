@@ -55,8 +55,6 @@ class _OrdersPageState extends State<OrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final _orderOngoing = Provider.of<OrderProviders>(context, listen: false).orderProgress;
-    // print(_orderOngoing[0]);
     return Scaffold(
       appBar: const CostumeAppBar(
         title: "",
@@ -78,25 +76,6 @@ class _OrdersPageState extends State<OrdersPage> {
               builder: (BuildContext context, Widget? child) {
                 final _orderOngoing =
                     Provider.of<OrderProviders>(context).listOrders;
-                // final _orderOngoing = [
-                //   {
-                //     "id": 1,
-                //     "name": "Shabil Alqorni",
-                //     "orders": [
-                //       {
-                //         "id": 1,
-                //         "jenis": "makanan",
-                //         "image": "assert/image/menu/1637916792.png",
-                //         "harga": "Rp 100",
-                //         "amount": 99,
-                //         "name": "Chicken Katsu",
-                //         "countOrder": 2,
-                //       }
-                //     ],
-                //     "voucher": {},
-                //   }
-                // ];
-
                 if (_orderOngoing.isNotEmpty) {
                   return _loading
                       ? const SkeletonOrderMenuCard()
@@ -105,7 +84,7 @@ class _OrdersPageState extends State<OrdersPage> {
                             for (final item in _orderOngoing)
                               if (item.status == 0)
                                 OrderMenuCard(
-                                  onPressed: () => Navigate.toViewOrder(
+                                  onPressed: () => Navigate.toDetailOrder(
                                     context,
                                     dataOrders: item,
                                   ),

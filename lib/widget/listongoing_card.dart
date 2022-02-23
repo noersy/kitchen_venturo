@@ -79,8 +79,8 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
   void initState() {
     _jumlahOrder = widget.data.jumlah ?? 0;
     nama = widget.data.nama ?? "";
-    url = widget.data.foto ??
-        'https://kulinerkota.com/wp-content/uploads/2021/11/gandariacity_97338922_1150898468600543_3703293674821080654_n-1024x1024.jpg';
+    url = widget.data.foto;
+    // url = 'https://i.ibb.co/R9kJtny/1637916829.png';
     harga = widget.data.harga ?? "";
     amount = int.parse(widget.data.harga);
 
@@ -112,7 +112,7 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
                 width: 74,
                 child: Padding(
                   padding: const EdgeInsets.all(SpaceDims.sp4),
-                  child: Image.asset(url),
+                  child: Image.network(url),
                 ),
                 decoration: BoxDecoration(
                   color: ColorSty.grey60,

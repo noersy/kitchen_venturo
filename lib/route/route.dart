@@ -24,13 +24,13 @@ class Navigate {
         title: title,
       ))) ??
       false;
-  static Future toDetailMenu(context,
-          {required Map<String, dynamic> data, required int countOrder}) =>
-      Navigator.of(context).push(
-          routeTransition(DetailMenu(data: data, countOrder: countOrder)));
-  static void toViewOrder(context, {required dataOrders}) =>
+  // static Future toDetailMenu(context,
+  //         {required Map<String, dynamic> data, required int countOrder}) =>
+  //     Navigator.of(context).push(
+  //         routeTransition(DetailMenu(data: data, countOrder: countOrder)));
+  static void toDetailOrder(context, {required dataOrders}) =>
       Navigator.of(context)
-          .push(routeTransition(OngoingOrderPage(dataOrder: dataOrders)));
+          .push(routeTransition(DetailOrder(dataOrder: dataOrders)));
   static void toViewOrderKasir(context,
           {required Map<String, dynamic> dataOrders, bool? preparing}) =>
       Navigator.of(context).push(routeTransition(
