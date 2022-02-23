@@ -4,12 +4,11 @@ import 'package:kitchen/models/menudetail.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
-import '../models/orderdetail.dart';
 import '../view/orders/ongoingorder_page.dart';
 
 class ListOrderOngoing extends StatelessWidget {
   final String type, title;
-  final List<Menu> orders;
+  final orders;
 
   const ListOrderOngoing({
     Key? key,
@@ -60,7 +59,7 @@ class ListOrderOngoing extends StatelessWidget {
 }
 
 class CardMenuOngoing extends StatefulWidget {
-  final Menu data;
+  final data;
 
   const CardMenuOngoing({
     Key? key,
@@ -78,12 +77,12 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
 
   @override
   void initState() {
-    // _jumlahOrder = widget.data["countOrder"] ?? 0;
-    // nama = widget.data["name"] ?? "";
+    _jumlahOrder = widget.data.jumlah ?? 0;
+    nama = widget.data.nama ?? "";
     url = widget.data.foto ??
         'https://kulinerkota.com/wp-content/uploads/2021/11/gandariacity_97338922_1150898468600543_3703293674821080654_n-1024x1024.jpg';
-    // harga = widget.data["harga"] ?? "";
-    // amount = widget.data["amount"] ?? 0;
+    harga = widget.data.harga ?? "";
+    amount = int.parse(widget.data.harga);
 
     super.initState();
   }

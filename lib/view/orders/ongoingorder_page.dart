@@ -23,14 +23,14 @@ class OngoingOrderPage extends StatefulWidget {
 
 class _OngoingOrderPageState extends State<OngoingOrderPage> {
   bool _loading = false;
-
+  List<Menu> lDetailMenu = [];
   getListDetailMenu() async {
     if (mounted) setState(() => _loading = true);
-    List<Menu> lDetailMenu =
+    lDetailMenu =
         Provider.of<OrderProviders>(context, listen: false).listDetailMenu;
     for (var item in widget.dataOrder.menu) {
       lDetailMenu.add(item);
-      print('list detail menu: ${item.nama}');
+      print('list detail menu: ${item.harga}');
     }
     if (mounted) setState(() => _loading = false);
   }
@@ -60,11 +60,11 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
             Column(
               children: [
                 // if (widget.dataOrder.menu.isNotEmpty)
-                // ListOrderOngoing(
-                //   orders: widget.dataOrder.menu,
-                //   title: 'Makanan',
-                //   type: 'makanan',
-                // ),
+                ListOrderOngoing(
+                  orders: lDetailMenu,
+                  title: 'Makanan',
+                  type: 'makanan',
+                ),
                 // if (widget.dataOrder["orders"]
                 //     .where((e) => e["jenis"] == "minuman")
                 //     .isNotEmpty)
