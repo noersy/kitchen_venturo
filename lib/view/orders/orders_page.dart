@@ -43,6 +43,7 @@ class _OrdersPageState extends State<OrdersPage> {
   Future<void> _onRefresh() async {
     var _duration = const Duration(seconds: 2);
 
+    getListOrder();
     if (mounted) {
       setState(() => _loading = true);
       Timer(_duration, () {
@@ -102,21 +103,23 @@ class _OrdersPageState extends State<OrdersPage> {
                       : Column(
                           children: [
                             for (final item in _orderOngoing)
-                              OrderMenuCard(
-                                onPressed: () => Navigate.toViewOrder(
-                                  context,
-                                  dataOrders: item,
-                                ),
-                                date: "date",
-                                // harga: item["orders"][0]["harga"],
-                                // title: item["orders"][0]["name"],
-                                // urlImage: item["orders"][0]["image"],
+                              if (item.status == 0)
+                                OrderMenuCard(
+                                  onPressed: () => Navigate.toViewOrder(
+                                    context,
+                                    dataOrders: item,
+                                  ),
+                                  date:
+                                      item.tanggal.toString().substring(0, 10),
+                                  // harga: item["orders"][0]["harga"],
+                                  // title: item["orders"][0]["name"],
+                                  // urlImage: item["orders"][0]["image"],
 
-                                harga: '10000',
-                                title: item.nama,
-                                jumlahMenu: item.menu.length,
-                                urlImage: "assert/image/menu/1637916792.png",
-                              ),
+                                  harga: '${item.totalBayar}',
+                                  title: item.nama,
+                                  jumlahMenu: item.menu.length,
+                                  urlImage: "assert/image/menu/1637916792.png",
+                                ),
                           ],
                         );
                 } else {
@@ -243,7 +246,7 @@ class OrderMenuCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Rp 20.000",
+                            "Rp $harga",
                             style: TypoSty.mini.copyWith(
                                 fontSize: 14.0, color: ColorSty.primary),
                           ),
