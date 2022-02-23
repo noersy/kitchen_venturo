@@ -7,9 +7,13 @@ import 'package:kitchen/theme/text_style.dart';
 import 'package:kitchen/widget/appbar.dart';
 import 'package:kitchen/widget/listmenu_tile.dart';
 import 'package:kitchen/widget/listongoing_card.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/listorder.dart';
+import '../../providers/order_providers.dart';
 
 class OngoingOrderPage extends StatefulWidget {
-  final dataOrder;
+  final Order dataOrder;
 
   const OngoingOrderPage({Key? key, required this.dataOrder}) : super(key: key);
 
@@ -18,8 +22,26 @@ class OngoingOrderPage extends StatefulWidget {
 }
 
 class _OngoingOrderPageState extends State<OngoingOrderPage> {
-  bool _sudahDiTerima = false;
+  bool _loading = false;
 
+  getListDetailMenu() async {
+    if (mounted) setState(() => _loading = true);
+    List<Menu> lDetailMenu =
+        Provider.of<OrderProviders>(context, listen: false).listDetailMenu;
+    for (var item in widget.dataOrder.menu) {
+      lDetailMenu.add(item);
+      print('list detail menu: ${item.nama}');
+    }
+    if (mounted) setState(() => _loading = false);
+  }
+
+  @override
+  void initState() {
+    getListDetailMenu();
+    super.initState();
+  }
+
+  bool _sudahDiTerima = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +51,7 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
         back: true,
         dense: false,
         lineWidth: 190.0,
-        profileTitle: "Pesanan " + widget.dataOrder["name"],
+        profileTitle: "Pesanan " + widget.dataOrder.nama,
       ),
       body: SingleChildScrollView(
         primary: true,
@@ -37,22 +59,20 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
           children: [
             Column(
               children: [
-                if (widget.dataOrder["orders"]
-                    .where((e) => e["jenis"] == "makanan")
-                    .isNotEmpty)
-                  ListOrderOngoing(
-                    orders: widget.dataOrder["orders"],
-                    title: 'Makanan',
-                    type: 'makanan',
-                  ),
-                if (widget.dataOrder["orders"]
-                    .where((e) => e["jenis"] == "minuman")
-                    .isNotEmpty)
-                  ListOrderOngoing(
-                    orders: widget.dataOrder["orders"],
-                    title: 'Minuman',
-                    type: 'minuman',
-                  ),
+                // if (widget.dataOrder.menu.isNotEmpty)
+                // ListOrderOngoing(
+                //   orders: widget.dataOrder.menu,
+                //   title: 'Makanan',
+                //   type: 'makanan',
+                // ),
+                // if (widget.dataOrder["orders"]
+                //     .where((e) => e["jenis"] == "minuman")
+                //     .isNotEmpty)
+                //   ListOrderOngoing(
+                //     orders: widget.dataOrder["orders"],
+                //     title: 'Minuman',
+                //     type: 'minuman',
+                //   ),
               ],
             ),
             const SizedBox(height: SpaceDims.sp24),
@@ -112,8 +132,8 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
                         TileListDMenu(
                           dense: true,
                           title: "Diskon 20%",
-                          prefix: widget.dataOrder["voucher"]["title"] ??
-                              "Rp 4.000",
+                          // prefix: widget.dataOrder["voucher"]["title"] ??
+                          //     "Rp 4.000",
                           textStylePrefix:
                               const TextStyle(color: Colors.redAccent),
                           iconSvg: SvgPicture.asset(

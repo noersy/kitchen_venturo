@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kitchen/models/menudetail.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
-
+import '../models/orderdetail.dart';
 import '../view/orders/ongoingorder_page.dart';
 
 class ListOrderOngoing extends StatelessWidget {
   final String type, title;
-  final List<dynamic> orders;
+  final List<Menu> orders;
 
   const ListOrderOngoing({
     Key? key,
@@ -22,34 +23,34 @@ class ListOrderOngoing extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: SpaceDims.sp22),
-        if (orders.where((element) => element["type"] == type).isEmpty)
-          Padding(
-            padding: const EdgeInsets.only(left: SpaceDims.sp18),
-            child: Row(
-              children: [
-                type.compareTo("makanan") == 0
-                    ? SvgPicture.asset("assert/image/icons/ep_food.svg",
-                        height: 22)
-                    : SvgPicture.asset("assert/image/icons/ep_coffee.svg",
-                        height: 26),
-                const SizedBox(width: SpaceDims.sp4),
-                Text(
-                  title,
-                  style: TypoSty.title.copyWith(
-                    color: ColorSty.primary,
-                  ),
+        // if (orders.where((element) => element["type"] == type).isEmpty)
+        Padding(
+          padding: const EdgeInsets.only(left: SpaceDims.sp18),
+          child: Row(
+            children: [
+              type.compareTo("makanan") == 0
+                  ? SvgPicture.asset("assert/image/icons/ep_food.svg",
+                      height: 22)
+                  : SvgPicture.asset("assert/image/icons/ep_coffee.svg",
+                      height: 26),
+              const SizedBox(width: SpaceDims.sp4),
+              Text(
+                title,
+                style: TypoSty.title.copyWith(
+                  color: ColorSty.primary,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
         const SizedBox(height: SpaceDims.sp12),
         SizedBox(
           width: double.infinity,
           child: Column(
             children: [
-              for (Map<String, dynamic> item in orders)
-                if (item["jenis"]?.compareTo(type) == 0)
-                  CardMenuOngoing(data: item),
+              for (var item in orders)
+                // if (item["jenis"]?.compareTo(type) == 0)
+                CardMenuOngoing(data: item),
             ],
           ),
         ),
@@ -59,7 +60,7 @@ class ListOrderOngoing extends StatelessWidget {
 }
 
 class CardMenuOngoing extends StatefulWidget {
-  final Map<String, dynamic> data;
+  final Menu data;
 
   const CardMenuOngoing({
     Key? key,
@@ -77,11 +78,12 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
 
   @override
   void initState() {
-    _jumlahOrder = widget.data["countOrder"] ?? 0;
-    nama = widget.data["name"] ?? "";
-    url = widget.data["image"] ?? "";
-    harga = widget.data["harga"] ?? "";
-    amount = widget.data["amount"] ?? 0;
+    // _jumlahOrder = widget.data["countOrder"] ?? 0;
+    // nama = widget.data["name"] ?? "";
+    url = widget.data.foto ??
+        'https://kulinerkota.com/wp-content/uploads/2021/11/gandariacity_97338922_1150898468600543_3703293674821080654_n-1024x1024.jpg';
+    // harga = widget.data["harga"] ?? "";
+    // amount = widget.data["amount"] ?? 0;
 
     super.initState();
   }
@@ -89,7 +91,8 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: SpaceDims.sp18, vertical: SpaceDims.sp2),
+      padding: const EdgeInsets.symmetric(
+          horizontal: SpaceDims.sp18, vertical: SpaceDims.sp2),
       child: Card(
         elevation: 4,
         color: ColorSty.white80,
@@ -162,11 +165,12 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     if (_jumlahOrder != 0)
-                      Text("$_jumlahOrder",
-                          style: TypoSty.subtitle.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20.0,
-                              color: ColorSty.black60),
+                      Text(
+                        "$_jumlahOrder",
+                        style: TypoSty.subtitle.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20.0,
+                            color: ColorSty.black60),
                       ),
                     TextButton(
                       onPressed: () {

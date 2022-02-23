@@ -15,7 +15,9 @@ class OrderProviders extends ChangeNotifier {
   static Map<String, dynamic> _checkOrder = {};
   static List<Map<String, dynamic>> _orderInProgress = [];
   static List<Order> _orders = [];
+  static List<Menu> _detailMenu = [];
 
+  List<Menu> get listDetailMenu => _detailMenu;
   List<Order> get listOrders => _orders;
   Map<String, dynamic> get checkOrder => _checkOrder;
 
