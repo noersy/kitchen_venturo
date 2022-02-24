@@ -16,9 +16,10 @@ class OrderProviders extends ChangeNotifier {
   static List<Map<String, dynamic>> _orderInProgress = [];
   static List<Order> _orders = [];
   static List<Menu> _detailMenu = [];
-
+  static List<Order> _histories = [];
   List<Menu> get listDetailMenu => _detailMenu;
   List<Order> get listOrders => _orders;
+  List<Order> get listHistorys => _histories;
   Map<String, dynamic> get checkOrder => _checkOrder;
 
   List<Map<String, dynamic>> get orderProgress => _orderInProgress;
@@ -108,7 +109,36 @@ class OrderProviders extends ChangeNotifier {
     }
   }
 
-  Future<bool> postUpdateStatus(status,idOrder) async {
+  Future<bool> getListHistory() async {
+    try {
+      final _api = Uri.http(host, "$sub/api/order/all");
+      _log.fine("Try to get order in progress");
+      final response = await http.get(_api, headers: headers);
+      print('response: ${response.body}');
+      if (response.statusCode == 204 ||
+          json.decode(response.body)["status_code"] == 204) {
+        _log.info("Order is empty");
+        _histories = [];
+      }
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status_code"] == 200) {
+        _histories = listOrderFromJson(response.body).data;
+        if (_orders.isEmpty) _log.info("Failed get order in progress.");
+        _log.fine("Success get order in progress.");
+        notifyListeners();
+        return true;
+      }
+      _log.info("Fail to get order in progress");
+      _log.info(response.body);
+      return false;
+    } catch (e, r) {
+      _log.warning(e);
+      _log.warning(r);
+      return false;
+    }
+  }
+
+  Future<bool> postUpdateStatus(status, idOrder) async {
     try {
       final Map<String, String> _queryParameters = <String, String>{
         'status': '$status',

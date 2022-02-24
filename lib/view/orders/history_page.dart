@@ -1,14 +1,16 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:kitchen/route/route.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/icons_cs_icons.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
 import 'package:kitchen/widget/appbar.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeleton_animation/skeleton_animation.dart';
+
+import '../../models/listorder.dart';
+import '../../providers/order_providers.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -23,6 +25,12 @@ class _HistoryPageState extends State<HistoryPage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   bool _loading = false;
+  getListHisory() async {
+    if (mounted) setState(() => _loading = true);
+    Provider.of<OrderProviders>(context, listen: false).listHistorys.clear();
+    await Provider.of<OrderProviders>(context, listen: false).getListHistory();
+    if (mounted) setState(() => _loading = false);
+  }
 
   Future<void> _onRefresh() async {
     var _duration = const Duration(seconds: 2);
@@ -34,6 +42,12 @@ class _HistoryPageState extends State<HistoryPage> {
         _refreshController.refreshCompleted();
       });
     }
+  }
+
+  @override
+  void initState() {
+    getListHisory();
+    super.initState();
   }
 
   @override
@@ -49,114 +63,96 @@ class _HistoryPageState extends State<HistoryPage> {
         controller: _refreshController,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: SpaceDims.sp18,
-              vertical: SpaceDims.sp14,
-            ),
-            child: true
-                ? Column(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SpaceDims.sp18,
+                vertical: SpaceDims.sp14,
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(
-                              right: SpaceDims.sp8,
-                              left: SpaceDims.sp12,
-                              bottom: SpaceDims.sp4,
-                              top: SpaceDims.sp4,
-                            ),
-                            width: 160.0,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: ColorSty.grey60,
-                                border: Border.all(color: ColorSty.primary),
-                                borderRadius: BorderRadius.circular(30.0)),
-                            child: DropdownButton<String>(
-                              isDense: true,
-                              value: _dropdownValue,
-                              alignment: Alignment.topCenter,
-                              borderRadius: BorderRadius.circular(30.0),
-                              icon: const Icon(Icons.arrow_drop_down),
-                              style: TypoSty.caption2.copyWith(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w600,
-                                  color: ColorSty.black),
-                              onChanged: (String? newValue) {
-                                setState(() => _dropdownValue = newValue!);
-                              },
-                              items: [
-                                for (String item in _item)
-                                  DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(item),
-                                  ),
-                              ],
-                            ),
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: ColorSty.grey60,
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(
-                                  color: ColorSty.primary,
-                                ),
-                                borderRadius: BorderRadius.circular(30.0),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          right: SpaceDims.sp8,
+                          left: SpaceDims.sp12,
+                          bottom: SpaceDims.sp4,
+                          top: SpaceDims.sp4,
+                        ),
+                        width: 160.0,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: ColorSty.grey60,
+                            border: Border.all(color: ColorSty.primary),
+                            borderRadius: BorderRadius.circular(30.0)),
+                        child: DropdownButton<String>(
+                          isDense: true,
+                          value: _dropdownValue,
+                          alignment: Alignment.topCenter,
+                          borderRadius: BorderRadius.circular(30.0),
+                          icon: const Icon(Icons.arrow_drop_down),
+                          style: TypoSty.caption2.copyWith(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                              color: ColorSty.black),
+                          onChanged: (String? newValue) {
+                            setState(() => _dropdownValue = newValue!);
+                          },
+                          items: [
+                            for (String item in _item)
+                              DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(item),
                               ),
-                            ),
-                            onPressed: null,
-                            child: SizedBox(
-                              width: 160.0,
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: SpaceDims.sp12),
-                                  Text("25/12/21 - 30/12/21",
-                                      style: TypoSty.caption2.copyWith(
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.w600),
-                                  ),
-                                  const SizedBox(width: SpaceDims.sp8),
-                                  const Icon(IconsCs.date,
-                                      size: 18.0, color: ColorSty.primary),
-                                  const SizedBox(width: SpaceDims.sp8),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: ColorSty.grey60,
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                              color: ColorSty.primary,
+                            ),
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        onPressed: null,
+                        child: SizedBox(
+                          width: 160.0,
+                          child: Row(
+                            children: [
+                              const SizedBox(width: SpaceDims.sp12),
+                              Text(
+                                "25/12/21 - 30/12/21",
+                                style: TypoSty.caption2.copyWith(
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(width: SpaceDims.sp8),
+                              const Icon(IconsCs.date,
+                                  size: 18.0, color: ColorSty.primary),
+                              const SizedBox(width: SpaceDims.sp8),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  for (var item
+                      in Provider.of<OrderProviders>(context, listen: false)
+                          .listHistorys)
+                    if (item.status == 3 || item.status == 4)
+                      // OrderHistoryCard(onPressed: () {}),
                       _loading
                           ? const SkeletonOrderCad()
-                          : OrderHistoryCard(onPressed: () {}),
-                      const SizedBox(height: SpaceDims.sp8),
-                    ],
-                  )
-                : SizedBox(
-                    height: MediaQuery.of(context).size.height - 80,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.asset("assert/image/bg_findlocation.png"),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(IconsCs.order,
-                                size: 120, color: ColorSty.primary),
-                            const SizedBox(height: SpaceDims.sp22),
-                            Text("Mulai buat pesanan.",
-                                textAlign: TextAlign.center,
-                                style: TypoSty.title2),
-                            const SizedBox(height: SpaceDims.sp12),
-                            Text(
-                                "Makanan yang kamu pesan\nakan muncul di sini agar\nkamu bisa menemukan\nmenu favoritmu lagi!.",
-                                textAlign: TextAlign.center,
-                                style: TypoSty.title2),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-          ),
+                          : OrderHistoryCard(
+                              onPressed: () {},
+                              data: item,
+                            ),
+                  const SizedBox(height: SpaceDims.sp14),
+                ],
+              )),
         ),
       ),
     );
@@ -165,8 +161,10 @@ class _HistoryPageState extends State<HistoryPage> {
 
 class OrderHistoryCard extends StatelessWidget {
   final VoidCallback onPressed;
-
-  const OrderHistoryCard({Key? key, required this.onPressed}) : super(key: key);
+  final Order data;
+  const OrderHistoryCard(
+      {Key? key, required this.onPressed, required this.data})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +209,7 @@ class OrderHistoryCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "20 Des 2021, 10:30",
+                              "${data.tanggal.toString().substring(0, 10)}",
                               style: TypoSty.mini
                                   .copyWith(color: Colors.grey, fontSize: 14.0),
                             ),
@@ -219,7 +217,8 @@ class OrderHistoryCard extends StatelessWidget {
                               children: [
                                 Text(
                                   "Selesai",
-                                  style: TypoSty.mini.copyWith(color: Colors.grey, fontSize: 14.0),
+                                  style: TypoSty.mini.copyWith(
+                                      color: Colors.grey, fontSize: 14.0),
                                 ),
                               ],
                             ),
@@ -228,7 +227,7 @@ class OrderHistoryCard extends StatelessWidget {
                       ),
                       const SizedBox(height: SpaceDims.sp4),
                       Text(
-                        "Shabil Alqorni",
+                        data.nama,
                         style: TypoSty.title.copyWith(fontSize: 20.0),
                         overflow: TextOverflow.ellipsis,
                       ),
