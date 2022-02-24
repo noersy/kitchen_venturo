@@ -20,6 +20,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  int statusCode = 3;
   String _dropdownValue = 'Semua Status';
   final List<String> _item = ["Semua Status", "Selesai", "Dibatalkan"];
   final RefreshController _refreshController =
@@ -96,7 +97,16 @@ class _HistoryPageState extends State<HistoryPage> {
                               fontWeight: FontWeight.w600,
                               color: ColorSty.black),
                           onChanged: (String? newValue) {
-                            setState(() => _dropdownValue = newValue!);
+                            setState(() => {
+                                  _dropdownValue = newValue!,
+                                  // "Semua Status", "Selesai", "Dibatalkan
+                                  if (_dropdownValue == 'Selesai')
+                                    statusCode = 3,
+                                  if (_dropdownValue == 'Dibatalkan')
+                                    statusCode = 4,
+                                  if (_dropdownValue == 'Semua Status')
+                                    statusCode = 5,
+                                });
                           },
                           items: [
                             for (String item in _item)
@@ -142,7 +152,19 @@ class _HistoryPageState extends State<HistoryPage> {
                   for (var item
                       in Provider.of<OrderProviders>(context, listen: false)
                           .listHistorys)
-                    if (item.status == 3 || item.status == 4)
+                    if (item.status == statusCode)
+                      // OrderHistoryCard(onPressed: () {}),
+                      _loading
+                          ? const SkeletonOrderCad()
+                          : OrderHistoryCard(
+                              onPressed: () {},
+                              data: item,
+                            ),
+                  for (var item
+                      in Provider.of<OrderProviders>(context, listen: false)
+                          .listHistorys)
+                    if (5 == statusCode &&
+                        (item.status == 3 || item.status == 4))
                       // OrderHistoryCard(onPressed: () {}),
                       _loading
                           ? const SkeletonOrderCad()
