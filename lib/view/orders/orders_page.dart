@@ -91,7 +91,9 @@ class _OrdersPageState extends State<OrdersPage> {
                       : Column(
                           children: [
                             for (final item in _orderOngoing)
-                              if (item.status == 0)
+                              if (item.status == 0 ||
+                                  item.status == 1 ||
+                                  item.status == 2)
                                 OrderMenuCard(
                                   onPressed: () => Navigate.toDetailOrder(
                                       context,
@@ -104,6 +106,7 @@ class _OrdersPageState extends State<OrdersPage> {
                                   // urlImage: item["orders"][0]["image"],
 
                                   harga: '${item.totalBayar}',
+                                  kodeStatus: item.status,
                                   title:
                                       'id: ${item.idOrder} | ${item.nama} | ${item.status}',
                                   jumlahMenu: item.menu.length,
@@ -151,6 +154,7 @@ class OrderMenuCard extends StatelessWidget {
   final String urlImage, title, date, harga;
   final VoidCallback onPressed;
   final jumlahMenu;
+  final kodeStatus;
   const OrderMenuCard(
       {Key? key,
       required this.urlImage,
@@ -158,7 +162,8 @@ class OrderMenuCard extends StatelessWidget {
       required this.date,
       required this.harga,
       required this.onPressed,
-      required this.jumlahMenu})
+      required this.jumlahMenu,
+      this.kodeStatus})
       : super(key: key);
 
   @override
@@ -211,11 +216,24 @@ class OrderMenuCard extends StatelessWidget {
                                   color: ColorSty.primary,
                                 ),
                                 const SizedBox(width: SpaceDims.sp4),
-                                Text(
-                                  "Pesanan Diterima",
-                                  style: TypoSty.mini
-                                      .copyWith(color: ColorSty.primary),
-                                ),
+                                if (kodeStatus == 0)
+                                  Text(
+                                    "Dalam Antrian",
+                                    style: TypoSty.mini
+                                        .copyWith(color: ColorSty.primary),
+                                  ),
+                                if (kodeStatus == 1)
+                                  Text(
+                                    "Sedang Siapkan",
+                                    style: TypoSty.mini
+                                        .copyWith(color: ColorSty.primary),
+                                  ),
+                                if (kodeStatus == 2)
+                                  Text(
+                                    "Bisa Diambil",
+                                    style: TypoSty.mini
+                                        .copyWith(color: ColorSty.primary),
+                                  ),
                               ],
                             ),
                             Text(
