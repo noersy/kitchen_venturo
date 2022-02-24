@@ -46,11 +46,11 @@ class _CardMenuState extends State<CardMenu> {
         ),
         child: TextButton(
           onPressed: () async {
-            await Navigate.toDetailMenu(
-              context,
-              data: widget.data,
-              countOrder: _jumlahOrder
-            );
+            // await Navigate.toDetailMenu(
+            //   context,
+            //   data: widget.data,
+            //   countOrder: _jumlahOrder
+            // );
             },
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(

@@ -42,7 +42,7 @@ class _DetailOrderState extends State<DetailOrder> {
     super.initState();
   }
 
-  bool _sudahDiTerima = false;
+  String _sudahDiTerima = 'belum';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +73,7 @@ class _DetailOrderState extends State<DetailOrder> {
       ),
       bottomNavigationBar: Container(
         width: double.infinity,
-        height: _sudahDiTerima ? 330 : 300,
+        height: 300,
         decoration: const BoxDecoration(
           color: ColorSty.grey80,
           borderRadius: BorderRadius.only(
@@ -150,213 +150,176 @@ class _DetailOrderState extends State<DetailOrder> {
                           onPressed: () {},
                         ),
                         const SizedBox(height: SpaceDims.sp4),
-                        if (!_sudahDiTerima)
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    primary: ColorSty.grey60,
-                                    onPrimary: ColorSty.black60,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                  ),
-                                  child: const Text("Batalkan"),
-                                ),
-                              ),
-                              const SizedBox(width: SpaceDims.sp24),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    showDialog(
-                                      barrierColor:
-                                          ColorSty.grey.withOpacity(0.2),
-                                      context: context,
-                                      builder: (_) => UpdateStatusDialog(
-                                        onPressed: () {
-                                          Provider.of<OrderProviders>(context,
-                                                  listen: false)
-                                              .postUpdateStatus(1);
-                                          // setState(() => _sudahDiTerima = true);
-                                          Navigator.pop(context);
-                                        },
-                                        title: "Update Status",
-                                        iconData: Icons.update,
-                                        caption:
-                                            "Apakah anda yakin akan\nmengubah status Pesan ini",
-                                        textButton: "Oke",
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                  ),
-                                  child: const Text("Terima Pesanan"),
-                                ),
-                              )
-                            ],
-                          ),
-                        if (_sudahDiTerima)
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: SpaceDims.sp18,
-                              right: SpaceDims.sp18,
-                              top: SpaceDims.sp12,
-                              bottom: SpaceDims.sp8,
-                            ),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                const Positioned(
-                                  width: 90,
-                                  top: 3.5,
-                                  left: 50,
-                                  child: Divider(thickness: 2),
-                                ),
-                                const Positioned(
-                                  width: 90,
-                                  top: 3.5,
-                                  right: 50,
-                                  child: Divider(thickness: 2),
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        children: const [
-                                          Icon(
-                                            Icons.check_circle,
-                                            color: ColorSty.primary,
-                                          ),
-                                          SizedBox(height: SpaceDims.sp4),
-                                          SizedBox(
-                                            width: 60,
-                                            child: Text(
-                                              "Pesanan diterima",
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Expanded(
-                                        child: Divider(thickness: 0)),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          showDialog(
-                                            barrierColor:
-                                                ColorSty.grey.withOpacity(0.2),
-                                            context: context,
-                                            builder: (_) => UpdateStatusDialog(
-                                              onPressed: () {},
-                                              title: "Update Status",
-                                              iconData: Icons.update,
-                                              caption:
-                                                  "Apakah anda yakin akan\nmengubah status Pesan ini",
-                                              textButton: "Oke",
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          children: [
-                                            const SizedBox(
-                                                height: SpaceDims.sp8),
-                                            SizedBox(
-                                              height: 10,
-                                              width: 10,
-                                              child: DecoratedBox(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100.0),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                                height: SpaceDims.sp6),
-                                            const Padding(
-                                              padding:
-                                                  EdgeInsets.all(SpaceDims.sp2),
-                                              child: SizedBox(
-                                                width: 60,
-                                                child: Text(
-                                                  "Silahkan Ambil",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const Expanded(
-                                        child: Divider(thickness: 0)),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          showDialog(
-                                            barrierColor:
-                                                ColorSty.grey.withOpacity(0.2),
-                                            context: context,
-                                            builder: (_) => UpdateStatusDialog(
-                                              onPressed: () {},
-                                              title: "Update Status",
-                                              iconData: Icons.update,
-                                              caption:
-                                                  "Apakah anda yakin akan\nmengubah status Pesan ini",
-                                              textButton: "Oke",
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          children: [
-                                            const SizedBox(
-                                                height: SpaceDims.sp8),
-                                            SizedBox(
-                                              height: 10,
-                                              width: 10,
-                                              child: DecoratedBox(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100.0),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                                height: SpaceDims.sp6),
-                                            const Padding(
-                                              padding:
-                                                  EdgeInsets.all(SpaceDims.sp2),
-                                              child: SizedBox(
-                                                width: 80,
-                                                child: Text(
-                                                  "Pesanan Selesai",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
+                        if (_sudahDiTerima == 'belum')
+                          buttonTerimaBatalPesanan(context),
+                        if (_sudahDiTerima != 'belum') StatusBar(context),
                       ],
                     ),
                   )
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buttonTerimaBatalPesanan(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              primary: ColorSty.grey60,
+              onPrimary: ColorSty.black60,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+            ),
+            child: const Text("Batalkan"),
+          ),
+        ),
+        const SizedBox(width: SpaceDims.sp24),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+              showDialog(
+                barrierColor: ColorSty.grey.withOpacity(0.2),
+                context: context,
+                builder: (_) => UpdateStatusDialog(
+                  onPressed: () {
+                    Provider.of<OrderProviders>(context, listen: false)
+                        .postUpdateStatus(1)
+                        .then((value) =>
+                            {setState(() => _sudahDiTerima = 'sudahDiterima')});
+                    Navigator.pop(context);
+                  },
+                  title: "Update Status",
+                  iconData: Icons.update,
+                  caption: "Apakah anda yakin akan\nmengubah status Pesan ini",
+                  textButton: "Oke",
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+            ),
+            child: const Text("Terima Pesanan"),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget StatusBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: SpaceDims.sp18,
+        right: SpaceDims.sp18,
+        // top: SpaceDims.sp12,
+        // bottom: SpaceDims.sp8,
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          const Positioned(
+            width: 90,
+            top: 3.5,
+            left: 50,
+            child: Divider(thickness: 2),
+          ),
+          const Positioned(
+            width: 90,
+            top: 3.5,
+            right: 50,
+            child: Divider(thickness: 2),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  children: const [
+                    Icon(
+                      Icons.check_circle,
+                      color: ColorSty.primary,
+                    ),
+                    SizedBox(height: SpaceDims.sp4),
+                    SizedBox(
+                      width: 60,
+                      child: Text(
+                        "Pesanan diterima",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Expanded(child: Divider(thickness: 0)),
+              ButtonBottomStatusBar(context, 'silahkan diambil', 2),
+              const Expanded(child: Divider(thickness: 0)),
+              ButtonBottomStatusBar(context, 'pesanan selesai', 3),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Expanded ButtonBottomStatusBar(BuildContext context, text, status) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          showDialog(
+            barrierColor: ColorSty.grey.withOpacity(0.2),
+            context: context,
+            builder: (_) => UpdateStatusDialog(
+              onPressed: () {
+                Provider.of<OrderProviders>(context, listen: false)
+                    .postUpdateStatus(2)
+                    .then(
+                        (value) => {setState(() => _sudahDiTerima = '$text')});
+                Navigator.pop(context);
+              },
+              title: "Update Status",
+              iconData: Icons.update,
+              caption: "Apakah anda yakin akan\nmengubah status Pesan ini",
+              textButton: "Oke",
+            ),
+          );
+        },
+        child: Column(
+          children: [
+            // const SizedBox(height: SpaceDims.sp8),
+            if (_sudahDiTerima != text && _sudahDiTerima != 'pesanan selesai')
+              SizedBox(
+                height: 10,
+                width: 10,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(100.0),
+                  ),
+                ),
+              ),
+            if (_sudahDiTerima == text || _sudahDiTerima == 'pesanan selesai')
+              Icon(
+                Icons.check_circle,
+                color: ColorSty.primary,
+              ),
+            // const SizedBox(height: SpaceDims.sp6),
+            Padding(
+              padding: EdgeInsets.all(SpaceDims.sp2),
+              child: SizedBox(
+                width: 60,
+                child: Text(
+                  "$text",
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ],
