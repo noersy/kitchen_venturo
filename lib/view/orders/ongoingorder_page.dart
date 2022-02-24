@@ -30,8 +30,7 @@ class _DetailOrderState extends State<DetailOrder> {
         Provider.of<OrderProviders>(context, listen: false).listDetailMenu;
     lDetailMenu.clear();
     for (var item in widget.dataOrder.menu) {
-      lDetailMenu.add(item);
-      print('list detail menu: ${item.foto}');
+      lDetailMenu.add(item); 
     }
     if (mounted) setState(() => _loading = false);
   }

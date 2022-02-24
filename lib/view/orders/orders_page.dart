@@ -25,7 +25,6 @@ class _OrdersPageState extends State<OrdersPage> {
   OrderDetail? data;
   bool _isLoading = false;
   getListOrder() async {
-    print('getListOrder');
     if (mounted) setState(() => _loading = true);
     Provider.of<OrderProviders>(context, listen: false).listOrders.clear();
     await Provider.of<OrderProviders>(context, listen: false).getListOrder();
@@ -33,7 +32,6 @@ class _OrdersPageState extends State<OrdersPage> {
   }
 
   onGoBack(dynamic value) {
-    print('ongoback');
     setState(() {
       getListOrder();
     });
