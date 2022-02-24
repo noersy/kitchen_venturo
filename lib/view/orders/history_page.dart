@@ -172,7 +172,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               onPressed: () {},
                               data: item,
                             ),
-                  const SizedBox(height: SpaceDims.sp14),
+                  const SizedBox(height:100),
                 ],
               )),
         ),
@@ -246,10 +246,9 @@ class OrderHistoryCard extends StatelessWidget {
                                   ),
                                 if (data.status == 3)
                                   Text(
-                                    "Sudah Diambil",
+                                    "Selesai",
                                     style: TypoSty.mini.copyWith(
-                                        color:
-                                            Color.fromARGB(255, 14, 203, 172),
+                                        color: ColorSty.primary,
                                         fontSize: 14.0),
                                   ),
                               ],
