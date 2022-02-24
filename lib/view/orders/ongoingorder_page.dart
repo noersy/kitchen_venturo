@@ -38,6 +38,16 @@ class _DetailOrderState extends State<DetailOrder> {
 
   @override
   void initState() {
+    if (widget.dataOrder.status == 1) {
+      setState(() {
+        _sudahDiTerima = 'sudahDiterima';
+      });
+    }
+    if (widget.dataOrder.status == 2) {
+      setState(() {
+        _sudahDiTerima = 'silahkan diambil';
+      });
+    }
     getListDetailMenu();
     super.initState();
   }
