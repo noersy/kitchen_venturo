@@ -30,7 +30,7 @@ class _DetailOrderState extends State<DetailOrder> {
         Provider.of<OrderProviders>(context, listen: false).listDetailMenu;
     lDetailMenu.clear();
     for (var item in widget.dataOrder.menu) {
-      lDetailMenu.add(item); 
+      lDetailMenu.add(item);
     }
     if (mounted) setState(() => _loading = false);
   }
@@ -179,7 +179,27 @@ class _DetailOrderState extends State<DetailOrder> {
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                barrierColor: ColorSty.grey.withOpacity(0.2),
+                context: context,
+                builder: (_) => UpdateStatusDialog(
+                  onPressed: () {
+                    Provider.of<OrderProviders>(context, listen: false)
+                        .postUpdateStatus(4, widget.dataOrder.idOrder)
+                        .then((value) => {
+                              Navigator.pop(context),
+                              Navigator.pop(context),
+                            });
+                  },
+                  title: "Batal Order",
+                  iconData: Icons.remove_circle_outline_rounded,
+                  caption:
+                      "Apakah anda yakin akan\nmembatalkan status Pesan ini",
+                  textButton: "Oke",
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               primary: ColorSty.grey60,
               onPrimary: ColorSty.black60,
@@ -305,7 +325,6 @@ class _DetailOrderState extends State<DetailOrder> {
         },
         child: Column(
           children: [
-            // const SizedBox(height: SpaceDims.sp8),
             if (_sudahDiTerima != text && _sudahDiTerima != 'pesanan selesai')
               SizedBox(
                 height: 10,
@@ -322,7 +341,6 @@ class _DetailOrderState extends State<DetailOrder> {
                 Icons.check_circle,
                 color: ColorSty.primary,
               ),
-            // const SizedBox(height: SpaceDims.sp6),
             Padding(
               padding: EdgeInsets.all(SpaceDims.sp2),
               child: SizedBox(
