@@ -26,6 +26,7 @@ class _OrdersPageState extends State<OrdersPage> {
   bool _isLoading = false;
   getListOrder() async {
     if (mounted) setState(() => _loading = true);
+    Provider.of<OrderProviders>(context, listen: false).listOrders.clear();
     await Provider.of<OrderProviders>(context, listen: false).getListOrder();
     if (mounted) setState(() => _loading = false);
   }
@@ -95,7 +96,8 @@ class _OrdersPageState extends State<OrdersPage> {
                                   // urlImage: item["orders"][0]["image"],
 
                                   harga: '${item.totalBayar}',
-                                  title: item.nama,
+                                  title:
+                                      'id: ${item.idOrder} | ${item.nama} | ${item.status}',
                                   jumlahMenu: item.menu.length,
                                   urlImage: "assert/image/menu/1637916792.png",
                                 ),

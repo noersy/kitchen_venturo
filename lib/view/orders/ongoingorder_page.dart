@@ -191,7 +191,7 @@ class _DetailOrderState extends State<DetailOrder> {
                 builder: (_) => UpdateStatusDialog(
                   onPressed: () {
                     Provider.of<OrderProviders>(context, listen: false)
-                        .postUpdateStatus(1)
+                        .postUpdateStatus(1, widget.dataOrder.idOrder)
                         .then((value) =>
                             {setState(() => _sudahDiTerima = 'sudahDiterima')});
                     Navigator.pop(context);
@@ -260,9 +260,11 @@ class _DetailOrderState extends State<DetailOrder> {
                 ),
               ),
               const Expanded(child: Divider(thickness: 0)),
-              ButtonBottomStatusBar(context, 'silahkan diambil', 2),
+              ButtonBottomStatusBar(
+                  context, 'silahkan diambil', 2, widget.dataOrder.idOrder),
               const Expanded(child: Divider(thickness: 0)),
-              ButtonBottomStatusBar(context, 'pesanan selesai', 3),
+              ButtonBottomStatusBar(
+                  context, 'pesanan selesai', 3, widget.dataOrder.idOrder),
             ],
           ),
         ],
@@ -270,7 +272,7 @@ class _DetailOrderState extends State<DetailOrder> {
     );
   }
 
-  Expanded ButtonBottomStatusBar(BuildContext context, text, status) {
+  Expanded ButtonBottomStatusBar(BuildContext context, text, status, idorder) {
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -280,7 +282,7 @@ class _DetailOrderState extends State<DetailOrder> {
             builder: (_) => UpdateStatusDialog(
               onPressed: () {
                 Provider.of<OrderProviders>(context, listen: false)
-                    .postUpdateStatus(2)
+                    .postUpdateStatus(status, idorder)
                     .then(
                         (value) => {setState(() => _sudahDiTerima = '$text')});
                 Navigator.pop(context);
@@ -307,7 +309,7 @@ class _DetailOrderState extends State<DetailOrder> {
                 ),
               ),
             if (_sudahDiTerima == text || _sudahDiTerima == 'pesanan selesai')
-              Icon(
+              const Icon(
                 Icons.check_circle,
                 color: ColorSty.primary,
               ),

@@ -108,13 +108,13 @@ class OrderProviders extends ChangeNotifier {
     }
   }
 
-  Future<bool> postUpdateStatus(status) async {
+  Future<bool> postUpdateStatus(status,idOrder) async {
     try {
       final Map<String, String> _queryParameters = <String, String>{
         'status': '$status',
       };
       final _api =
-          Uri.http(host, "api/order/update/status/133", _queryParameters);
+          Uri.http(host, "api/order/update/status/$idOrder", _queryParameters);
 
       print('api: $_api');
       _log.fine("Try to get order in progress");
