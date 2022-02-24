@@ -110,11 +110,12 @@ class _DetailOrderState extends State<DetailOrder> {
                               "Total Pesanan ",
                               style: TypoSty.captionSemiBold,
                             ),
-                            Text("(3 Menu) :", style: TypoSty.caption),
+                            Text("(${widget.dataOrder.menu.length} Menu) :",
+                                style: TypoSty.caption),
                           ],
                         ),
                         Text(
-                          "Rp 30.000",
+                          "Rp ${widget.dataOrder.totalBayar}",
                           style: TypoSty.subtitle.copyWith(
                             color: ColorSty.primary,
                           ),
@@ -154,7 +155,7 @@ class _DetailOrderState extends State<DetailOrder> {
                         TileListDMenu(
                           dense: true,
                           title: "Total Pembayaran",
-                          prefix: "Rp 4.000",
+                          prefix: "Rp ${widget.dataOrder.totalBayar}",
                           textStylePrefix: TypoSty.titlePrimary,
                           onPressed: () {},
                         ),

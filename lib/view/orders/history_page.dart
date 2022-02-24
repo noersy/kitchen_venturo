@@ -215,11 +215,21 @@ class OrderHistoryCard extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                Text(
-                                  "Selesai",
-                                  style: TypoSty.mini.copyWith(
-                                      color: Colors.grey, fontSize: 14.0),
-                                ),
+                                if (data.status == 4)
+                                  Text(
+                                    "Dibatalkan",
+                                    style: TypoSty.mini.copyWith(
+                                        color: Color.fromARGB(255, 212, 40, 40),
+                                        fontSize: 14.0),
+                                  ),
+                                if (data.status == 3)
+                                  Text(
+                                    "Sudah Diambil",
+                                    style: TypoSty.mini.copyWith(
+                                        color:
+                                            Color.fromARGB(255, 14, 203, 172),
+                                        fontSize: 14.0),
+                                  ),
                               ],
                             ),
                           ],
