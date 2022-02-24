@@ -107,4 +107,39 @@ class OrderProviders extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> postUpdateStatus(status) async {
+    try {
+      final Map<String, String> _queryParameters = <String, String>{
+        'status': '$status',
+      };
+      final _api =
+          Uri.http(host, "api/order/update/status/133", _queryParameters);
+
+      print('api: $_api');
+      _log.fine("Try to get order in progress");
+      final response = await http.post(_api, headers: headers);
+      print('response: ${response.body}');
+      if (response.statusCode == 204 ||
+          json.decode(response.body)["status_code"] == 204) {
+        _log.info("Order is empty");
+        _orders = [];
+      }
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status_code"] == 200) {
+        _orders = listOrderFromJson(response.body).data;
+        if (_orders.isEmpty) _log.info("Failed get order in progress.");
+        _log.fine("Success get order in progress.");
+        notifyListeners();
+        return true;
+      }
+      _log.info("Fail to get order in progress");
+      _log.info(response.body);
+      return false;
+    } catch (e, r) {
+      _log.warning(e);
+      _log.warning(r);
+      return false;
+    }
+  }
 }

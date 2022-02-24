@@ -176,7 +176,10 @@ class _DetailOrderState extends State<DetailOrder> {
                                       context: context,
                                       builder: (_) => UpdateStatusDialog(
                                         onPressed: () {
-                                          setState(() => _sudahDiTerima = true);
+                                          Provider.of<OrderProviders>(context,
+                                                  listen: false)
+                                              .postUpdateStatus(1);
+                                          // setState(() => _sudahDiTerima = true);
                                           Navigator.pop(context);
                                         },
                                         title: "Update Status",
