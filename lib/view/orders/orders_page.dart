@@ -25,10 +25,18 @@ class _OrdersPageState extends State<OrdersPage> {
   OrderDetail? data;
   bool _isLoading = false;
   getListOrder() async {
+    print('getListOrder');
     if (mounted) setState(() => _loading = true);
     Provider.of<OrderProviders>(context, listen: false).listOrders.clear();
     await Provider.of<OrderProviders>(context, listen: false).getListOrder();
     if (mounted) setState(() => _loading = false);
+  }
+
+  onGoBack(dynamic value) {
+    print('ongoback');
+    setState(() {
+      getListOrder();
+    });
   }
 
   @override
@@ -86,9 +94,9 @@ class _OrdersPageState extends State<OrdersPage> {
                               if (item.status == 0)
                                 OrderMenuCard(
                                   onPressed: () => Navigate.toDetailOrder(
-                                    context,
-                                    dataOrders: item,
-                                  ),
+                                      context,
+                                      dataOrders: item,
+                                      onGoBack: onGoBack),
                                   date:
                                       item.tanggal.toString().substring(0, 10),
                                   // harga: item["orders"][0]["harga"],
