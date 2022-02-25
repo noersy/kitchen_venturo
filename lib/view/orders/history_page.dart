@@ -42,7 +42,10 @@ class _HistoryPageState extends State<HistoryPage> {
   getListHisory() async {
     if (mounted) setState(() => _loading = true);
     Provider.of<OrderProviders>(context, listen: false).listHistorys.clear();
-    await Provider.of<OrderProviders>(context, listen: false).getListHistory();
+    await Provider.of<OrderProviders>(context, listen: false)
+        .getListHistory()
+        .then((value) => _data =
+            Provider.of<OrderProviders>(context, listen: false).listHistorys);
     if (mounted) setState(() => _loading = false);
   }
 
@@ -197,9 +200,10 @@ class _HistoryPageState extends State<HistoryPage> {
                       ),
                     ],
                   ),
-                  for (var item
-                      in Provider.of<OrderProviders>(context, listen: false)
-                          .listHistorys)
+                  // for (var item
+                  //     in Provider.of<OrderProviders>(context, listen: false)
+                  //         .listHistorys)
+                  for (var item in _data)
                     if (item.status == statusCode)
                       // OrderHistoryCard(onPressed: () {}),
                       _loading
@@ -208,9 +212,10 @@ class _HistoryPageState extends State<HistoryPage> {
                               onPressed: () {},
                               data: item,
                             ),
-                  for (var item
-                      in Provider.of<OrderProviders>(context, listen: false)
-                          .listHistorys)
+                  // for (var item
+                  //     in Provider.of<OrderProviders>(context, listen: false)
+                  //         .listHistorys)
+                  for (var item in _data)
                     if (5 == statusCode &&
                         (item.status == 3 || item.status == 4))
                       // OrderHistoryCard(onPressed: () {}),
