@@ -76,16 +76,25 @@ class _HistoryPageState extends State<HistoryPage> {
 
       _dateStart = val.startDate;
       _dateEnd = val.endDate;
-      _status = 0;
-      _dropdownValue = "Semua Status";
-      _data = _orders
+      print('_dateStart: $_dateStart | _dateEnd: $_dateEnd');
+      _data = Provider.of<OrderProviders>(context, listen: false)
+          .listHistorys
           .where((element) => (element.tanggal.compareTo(_dateStart!) >= 0 &&
               element.tanggal.compareTo(_dateEnd!) <= 0))
           .toList();
+      for (var item in _data) {
+        print(' tgl: ${item.tanggal}');
+      }
+      // _status = 0;
+      // _dropdownValue = "Semua Status";
+      // _data = _orders
+      //     .where((element) => (element.tanggal.compareTo(_dateStart!) >= 0 &&
+      //         element.tanggal.compareTo(_dateEnd!) <= 0))
+      //     .toList();
 
-      _dateRange = dateFormat.format(val.startDate!) +
-          " - " +
-          dateFormat.format(val.endDate!);
+      // _dateRange = dateFormat.format(val.startDate!) +
+      //     " - " +
+      //     dateFormat.format(val.endDate!);
       setState(() {});
     }
   }
