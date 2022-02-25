@@ -105,8 +105,7 @@ class _OrdersPageState extends State<OrdersPage> {
 
                                   harga: '${item.totalBayar}',
                                   kodeStatus: item.status,
-                                  title:
-                                      'id: ${item.idOrder} | ${item.nama} | ${item.status}',
+                                  title: '${item.nama}',
                                   jumlahMenu: item.menu.length,
                                   urlImage: "assert/image/menu/1637916792.png",
                                 ),

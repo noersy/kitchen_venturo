@@ -85,7 +85,7 @@ class OrderProviders extends ChangeNotifier {
       final _api = Uri.http(host, "$sub/api/order/all");
       _log.fine("Try to get order in progress");
       final response = await http.get(_api, headers: headers);
-      print('response: ${response.body}');
+      // print('response: ${response.body}');
       if (response.statusCode == 204 ||
           json.decode(response.body)["status_code"] == 204) {
         _log.info("Order is empty");
@@ -114,7 +114,7 @@ class OrderProviders extends ChangeNotifier {
       final _api = Uri.http(host, "$sub/api/order/all");
       _log.fine("Try to get order in progress");
       final response = await http.get(_api, headers: headers);
-      print('response: ${response.body}');
+      // print('response: ${response.body}');
       if (response.statusCode == 204 ||
           json.decode(response.body)["status_code"] == 204) {
         _log.info("Order is empty");
@@ -146,10 +146,10 @@ class OrderProviders extends ChangeNotifier {
       final _api =
           Uri.http(host, "api/order/update/status/$idOrder", _queryParameters);
 
-      print('api: $_api');
+      // print('api: $_api');
       _log.fine("Try to get order in progress");
       final response = await http.post(_api, headers: headers);
-      print('response: ${response.body}');
+      // print('response: ${response.body}');
       if (response.statusCode == 204 ||
           json.decode(response.body)["status_code"] == 204) {
         _log.info("Order is empty");

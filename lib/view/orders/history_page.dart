@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/icons_cs_icons.dart';
 import 'package:kitchen/theme/spacing.dart';
@@ -8,7 +9,8 @@ import 'package:kitchen/widget/appbar.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeleton_animation/skeleton_animation.dart';
-
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import '../../constans/tools.dart';
 import '../../models/listorder.dart';
 import '../../providers/order_providers.dart';
 
@@ -20,6 +22,17 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  static DateTime? _dateStart;
+  static DateTime? _dateEnd;
+  static int _status = 0;
+  static List<Order> _data = [];
+  static List<Order> _orders = [];
+  static final DateTime _dateNow = DateTime.now();
+  String _dateRange = dateFormat.format(_dateNow) +
+      " - " +
+      dateFormat.format(
+        DateTime(_dateNow.year, _dateNow.month, _dateNow.day + 7),
+      );
   int statusCode = 3;
   String _dropdownValue = 'Semua Status';
   final List<String> _item = ["Semua Status", "Selesai", "Dibatalkan"];
@@ -49,6 +62,32 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     getListHisory();
     super.initState();
+  }
+
+  void _pickDateRange() async {
+    final value = await showDialog(
+      barrierColor: ColorSty.grey.withOpacity(0.2),
+      context: context,
+      builder: (_) => const DateRangePickerDialog(),
+    );
+
+    if (value != null) {
+      final val = (value as PickerDateRange);
+
+      _dateStart = val.startDate;
+      _dateEnd = val.endDate;
+      _status = 0;
+      _dropdownValue = "Semua Status";
+      _data = _orders
+          .where((element) => (element.tanggal.compareTo(_dateStart!) >= 0 &&
+              element.tanggal.compareTo(_dateEnd!) <= 0))
+          .toList();
+
+      _dateRange = dateFormat.format(val.startDate!) +
+          " - " +
+          dateFormat.format(val.endDate!);
+      setState(() {});
+    }
   }
 
   @override
@@ -127,7 +166,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                         ),
-                        onPressed: null,
+                        onPressed: _pickDateRange,
                         child: SizedBox(
                           width: 160.0,
                           child: Row(
@@ -172,7 +211,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               onPressed: () {},
                               data: item,
                             ),
-                  const SizedBox(height:100),
+                  const SizedBox(height: 100),
                 ],
               )),
         ),
@@ -374,5 +413,41 @@ class SkeletonOrderCad extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class DateRangePickerDialog extends StatelessWidget {
+  const DateRangePickerDialog({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenUtilInit(builder: () {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(SpaceDims.sp12),
+          child: SizedBox(
+            height: 0.5.sh,
+            width: double.infinity,
+            child: SfDateRangePicker(
+              onSubmit: (value) {
+                if (value.runtimeType == PickerDateRange &&
+                    (value as PickerDateRange).endDate != null) {
+                  Navigator.pop(context, value);
+                }
+              },
+              onCancel: () => Navigator.pop(context),
+              showActionButtons: true,
+              selectionMode: DateRangePickerSelectionMode.range,
+              extendableRangeSelectionDirection:
+                  ExtendableRangeSelectionDirection.both,
+              view: DateRangePickerView.month,
+            ),
+          ),
+        ),
+      );
+    });
   }
 }
