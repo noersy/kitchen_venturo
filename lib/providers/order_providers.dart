@@ -5,6 +5,7 @@ import 'package:kitchen/tools/random_string.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart' as logging;
 import '../constans/hosts.dart';
+import '../models/listhistory.dart';
 import '../models/listorder.dart';
 
 class OrderProviders extends ChangeNotifier {
@@ -171,5 +172,44 @@ class OrderProviders extends ChangeNotifier {
       _log.warning(r);
       return false;
     }
+  }
+
+  Future<List<Order>?> getHistoryLimit(limit, start) async {
+    // final user = UserInstance.getInstance().user;
+    // print('user: ${user!.data.idUser}');
+    final user = 1;
+    if (user == null) return null;
+
+    try {
+      _log.fine("Try to get list history of order");
+      final response = await http.get(
+          // Uri.parse(
+          //     "https://$host/api/order/history/${user.data.idUser}?limit=$limit&start=$start"),
+          Uri.parse(
+              "https://$host/api/order/history/${user}?limit=$limit&start=$start"),
+          headers: headers);
+      // final response = await http.get(
+      //   _api,
+      //   headers: headers,
+      // );
+      // print('response.limit: ${response.body}');
+      if (response.statusCode == 204) {
+        _log.info("History if empty");
+        return [];
+      }
+
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status_code"] == 200) {
+        _log.fine("Success get list history of order:");
+        // print('body sukses:\n${response.body}');
+        return listHistoryFromJson(response.body).data;
+      }
+      _log.info("Fail to get liest history");
+      _log.info(response.body);
+    } catch (e, r) {
+      _log.warning(e);
+      _log.warning(r);
+    }
+    return null;
   }
 }
