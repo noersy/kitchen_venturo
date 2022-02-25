@@ -22,7 +22,7 @@ class ConstLang {
       caption: "You have verified ID card",
       br: "New Pin",
       lm: "Old Pin",
-      bhs: "Change Language"
+      bhs: "Change Language", status3: ''
     ),
     pesanan: LangPesanan(
       tap: "Ongoing",
@@ -55,7 +55,7 @@ class ConstLang {
       caption: "Kamu sudah verifikasi KTP",
       br: "Pin Baru",
       lm: "Pin Lama",
-      bhs: "Ganti Bahasa",
+      bhs: "Ganti Bahasa", status3: '',
     ),
     pesanan: LangPesanan(
       tap: "Sedang Berjalan",

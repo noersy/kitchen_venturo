@@ -25,6 +25,18 @@ class OrderProviders extends ChangeNotifier {
 
   List<Map<String, dynamic>> get orderProgress => _orderInProgress;
 
+  clear() {
+    _checkOrder = {};
+    _orderInProgress = [];
+    // _menuList = null;
+    // _listVoucher = [];
+    // _listDiscount = [];
+    // _listPromo = [];
+    _orders = [];
+
+    _log.fine("clear all orders");
+    notifyListeners();
+  }
   addOrder({
     required Map<String, dynamic> data,
     required int jumlahOrder,
