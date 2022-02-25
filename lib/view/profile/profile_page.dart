@@ -93,8 +93,9 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: SpaceDims.sp32),
-                          child: Text(lang.profile.subtitle,
-                              style: TypoSty.titlePrimary,
+                          child: Text(
+                            lang.profile.subtitle,
+                            style: TypoSty.titlePrimary,
                           ),
                         ),
                         Container(
@@ -151,29 +152,28 @@ class ProfilePage extends StatelessWidget {
                                 },
                               ),
                               AnimatedBuilder(
-                                  animation: LangProviders(),
-                                  builder: (context, snapshot) {
-                                    bool _isIndo =
-                                        Provider.of<LangProviders>(context)
-                                            .isIndo;
-                                    return TileListProfile(
-                                      title: lang.profile.bhs,
-                                      suffix: _isIndo ? 'Indonesia' : 'English',
-                                      onPreseed: () => showModalBottomSheet(
-                                        barrierColor:
-                                            ColorSty.grey.withOpacity(0.2),
-                                        elevation: 5,
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(30.0),
-                                                topRight:
-                                                    Radius.circular(30.0))),
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            const ChangeLagSheet(),
-                                      ),
-                                    );
-                                  },
+                                animation: LangProviders(),
+                                builder: (context, snapshot) {
+                                  bool _isIndo =
+                                      Provider.of<LangProviders>(context)
+                                          .isIndo;
+                                  return TileListProfile(
+                                    title: lang.profile.bhs,
+                                    suffix: _isIndo ? 'Indonesia' : 'English',
+                                    onPreseed: () => showModalBottomSheet(
+                                      barrierColor:
+                                          ColorSty.grey.withOpacity(0.2),
+                                      elevation: 5,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(30.0),
+                                              topRight: Radius.circular(30.0))),
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          const ChangeLagSheet(),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -181,6 +181,30 @@ class ProfilePage extends StatelessWidget {
                         const SizedBox(height: SpaceDims.sp22),
                       ],
                     ),
+                    Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: SpaceDims.sp24,
+                        vertical: SpaceDims.sp12,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: SpaceDims.sp22,
+                      ),
+                      decoration: BoxDecoration(
+                        color: ColorSty.grey60,
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Column(
+                        children: const [
+                          TileListProfile(
+                            top: false,
+                            title: 'Penilaian',
+                            button: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: SpaceDims.sp22),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -262,17 +286,20 @@ class InfoSheet extends StatelessWidget {
 
 class TileListProfile extends StatefulWidget {
   final bool? top, bottom;
-  final String title, suffix;
+  final String? suffix;
+  final String title;
+  final bool? button;
   final Function()? onPreseed;
 
-  const TileListProfile({
-    Key? key,
-    this.top = true,
-    this.bottom = false,
-    required this.title,
-    required this.suffix,
-    this.onPreseed,
-  }) : super(key: key);
+  const TileListProfile(
+      {Key? key,
+      this.top = true,
+      this.bottom = false,
+      required this.title,
+      this.suffix,
+      this.onPreseed,
+      this.button})
+      : super(key: key);
 
   @override
   State<TileListProfile> createState() => _TileListProfileState();
@@ -348,15 +375,27 @@ class _TileListProfileState extends State<TileListProfile> {
                 Text(widget.title, style: TypoSty.captionSemiBold),
                 Row(
                   children: [
-                    Text(
-                      widget.suffix,
-                      style: TypoSty.caption.copyWith(fontSize: 14.0),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: ColorSty.grey,
-                      size: 16.0,
-                    )
+                    if (widget.button != null)
+                      ElevatedButton(
+                          onPressed: () {},
+                          child: const Text('Nilai sekarang'),
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(
+                                          color: ColorSty.primary))))),
+                    if (widget.suffix != null)
+                      Text(
+                        widget.suffix.toString(),
+                        style: TypoSty.caption.copyWith(fontSize: 14.0),
+                      ),
+                    // const Icon(
+                    //   Icons.arrow_forward_ios,
+                    //   color: ColorSty.grey,
+                    //   size: 16.0,
+                    // )
                   ],
                 ),
               ],
