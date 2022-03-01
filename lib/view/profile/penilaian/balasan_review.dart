@@ -24,6 +24,7 @@ class _BalasanReviewState extends State<BalasanReview> {
     listChat.clear();
     Future data = getAllChat(widget.idReview);
     data.then((value) {
+      print('loadChat: $value');
       Map json = jsonDecode(value);
       // print('json: ${json['data']}');
       var jsonData = json['data'];

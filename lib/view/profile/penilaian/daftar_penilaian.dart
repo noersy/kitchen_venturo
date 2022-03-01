@@ -19,15 +19,16 @@ class _DaftarPenilaianState extends State<DaftarPenilaian>
   loadReview() {
     Future data = getAllReview();
     data.then((value) {
-      Map json = jsonDecode(value);
-      print('json:${json} ');
-      for (var i in json['data']) {
-        Review rv = Review.fromJson(i);
-        listReview.add(rv);
+      if (value != null) {
+        Map json = jsonDecode(value);
+        for (var i in json['data']) {
+          Review rv = Review.fromJson(i);
+          listReview.add(rv);
+        }
+        setState(() {
+          widgetListReview();
+        });
       }
-      setState(() {
-        widgetListReview();
-      });
     });
   }
 

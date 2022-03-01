@@ -109,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
 
   _checkPrefens() async {
     bool _isAlreadyLogin = await _preferences.getBoolValue(KeyPrefens.login);
+    print('_checkPrefens _isAlreadyLogin: $_isAlreadyLogin');
     if (_isAlreadyLogin) {
       setState(() => _loading = true);
       final id = await _preferences.getIntValue(KeyPrefens.loginID);

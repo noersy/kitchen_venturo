@@ -60,6 +60,7 @@ Future getAllChat(idReview) async {
     final response = await http.get(
         Uri.parse("https://$host/api/review/detail/$idReview"),
         headers: headers);
+    print('id review: $idReview | body sukses:\n${response.body}');
     if (response.statusCode == 204) {
       _log.info("review if empty");
       // return [];
@@ -69,7 +70,6 @@ Future getAllChat(idReview) async {
         json.decode(response.body)["status_code"] == 200) {
       _log.fine("Success get all review:");
       return (response.body);
-      // print('body sukses:\n${response.body}');
       // return listHistoryFromJson(response.body).data;
     }
     _log.info("Fail to get list review");
