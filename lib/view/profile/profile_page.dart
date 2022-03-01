@@ -521,11 +521,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   TileListProfile(
                                     top: false,
                                     enable: false,
+                                    btn: true,
                                     title: lang.profile.penilaian.toString(),
                                     suffix: lang.profile.nilai_sekarang,
                                     onPressed: () {
                                       // print('navigate daftar penilaian');
-                                      Navigate.toDaftarPenilaian(context);
                                     },
                                   ),
                                 ],
@@ -615,17 +615,19 @@ class TileListProfile extends StatefulWidget {
   final String title, suffix;
   final Function()? onPressed;
   final Function(String value)? onSubmit;
+  final bool? btn;
 
-  const TileListProfile({
-    Key? key,
-    this.top = true,
-    this.bottom = false,
-    required this.title,
-    required this.suffix,
-    this.onPressed,
-    this.enable = true,
-    this.onSubmit,
-  }) : super(key: key);
+  const TileListProfile(
+      {Key? key,
+      this.top = true,
+      this.bottom = false,
+      required this.title,
+      required this.suffix,
+      this.onPressed,
+      this.enable = true,
+      this.onSubmit,
+      this.btn})
+      : super(key: key);
 
   @override
   State<TileListProfile> createState() => _TileListProfileState();
@@ -715,21 +717,29 @@ class _TileListProfileState extends State<TileListProfile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            widget.suffix,
-                            overflow: TextOverflow.ellipsis,
-                            style: TypoSty.caption.copyWith(fontSize: 14.0),
+                      if (widget.btn == true)
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigate.toDaftarPenilaian(context);
+                            },
+                            child: Text('${widget.suffix}')),
+                      if (widget.btn == null)
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              widget.suffix,
+                              overflow: TextOverflow.ellipsis,
+                              style: TypoSty.caption.copyWith(fontSize: 14.0),
+                            ),
                           ),
                         ),
-                      ),
-                      const Icon(
-                        Icons.edit,
-                        color: ColorSty.grey,
-                        size: 16.0,
-                      )
+                      if (widget.btn == null)
+                        const Icon(
+                          Icons.edit,
+                          color: ColorSty.grey,
+                          size: 16.0,
+                        )
                     ],
                   ),
                 ),

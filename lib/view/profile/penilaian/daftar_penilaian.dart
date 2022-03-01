@@ -20,6 +20,7 @@ class _DaftarPenilaianState extends State<DaftarPenilaian>
     Future data = getAllReview();
     data.then((value) {
       Map json = jsonDecode(value);
+      print('json:${json} ');
       for (var i in json['data']) {
         Review rv = Review.fromJson(i);
         listReview.add(rv);
