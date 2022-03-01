@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:kitchen/models/listdiscount.dart';
 import 'package:kitchen/tools/random_string.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart' as logging;
@@ -18,11 +19,12 @@ class OrderProviders extends ChangeNotifier {
   static List<Order> _orders = [];
   static List<Menu> _detailMenu = [];
   static List<Order> _histories = [];
+  static List<Discount> _listDiscount = [];
+  List<Discount> get listDiscount => _listDiscount;
   List<Menu> get listDetailMenu => _detailMenu;
   List<Order> get listOrders => _orders;
   List<Order> get listHistorys => _histories;
   Map<String, dynamic> get checkOrder => _checkOrder;
-
   List<Map<String, dynamic>> get orderProgress => _orderInProgress;
   clear() {
     _checkOrder = {};

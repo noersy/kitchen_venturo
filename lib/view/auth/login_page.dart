@@ -58,7 +58,6 @@ class _LoginPageState extends State<LoginPage> {
             return AlertDialog(
               title: const Text(
                   'Email/password anda salah!\nAnda belum mendaftar?'),
-              // content: Text('email '),
               actions: <Widget>[
                 TextButton(
                     onPressed: () {

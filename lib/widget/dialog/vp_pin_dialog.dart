@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kitchen/models/listvoucher.dart';
+import 'package:kitchen/singletons/user_instance.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
-import 'package:kitchen/widget/orderdone_dialog.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class VPinDialog extends StatefulWidget {
-  final Map<String, dynamic>? voucher;
+  final LVoucher? voucher;
   final String? title;
-  final ValueChanged<void>? onComplete;
+  final bool? giveString;
+  final ValueChanged<Object>? onComplete;
 
-  const VPinDialog(
-      {Key? key,
-      this.voucher,
-      this.title = "Verifikasi Pesanan",
-      this.onComplete})
-      : super(key: key);
+  const VPinDialog({
+    Key? key,
+    this.voucher,
+    this.title = "Verifikasi Pesanan",
+    this.onComplete,
+    this.giveString = false,
+  }) : super(key: key);
 
   @override
   State<VPinDialog> createState() => _VPinDialogState();
@@ -27,7 +30,7 @@ class _VPinDialogState extends State<VPinDialog> {
 
   final FocusNode _pinPutFocusNode = FocusNode();
   bool _isHide = true;
-
+  var visibilityPinIcon = Icons.visibility_off;
   BoxDecoration get _pinPutDecoration {
     return BoxDecoration(
       border: Border.all(color: ColorSty.primary),
@@ -40,9 +43,9 @@ class _VPinDialogState extends State<VPinDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.h)),
       child: SizedBox(
-        height: 0.19.sh,
+        height: 160,
         child: Padding(
-          padding: EdgeInsets.only(top: 24.w),
+          padding: const EdgeInsets.only(top: 24),
           child: Column(
             children: [
               Text(
@@ -62,10 +65,10 @@ class _VPinDialogState extends State<VPinDialog> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                  top: 10.w,
-                  left: 18.w,
-                  right: 18.w,
+                padding: const EdgeInsets.only(
+                  top: 10,
+                  left: 18,
+                  right: 18,
                 ),
                 child: Row(
                   children: [
@@ -77,14 +80,42 @@ class _VPinDialogState extends State<VPinDialog> {
                         obscureText: _isHide ? "*" : null,
                         textStyle: TypoSty.button,
                         eachFieldConstraints: const BoxConstraints(
-                            minHeight: 30.0, minWidth: 30.0),
+                          minHeight: 30.0,
+                          minWidth: 30.0,
+                        ),
                         onSubmit: (_) {
+                          final user = UserInstance.getInstance().user;
+                          if (user == null) return;
+                          final correct =
+                              user.data.pin == _pinPutController.text;
+                          Navigator.pop(context, correct);
+                          // print('correct $correct');
+                          if (widget.onComplete != null &&
+                              !widget.giveString!) {
+                            widget.onComplete!(correct);
+
+                            if (!correct) {
+                              showDialog(
+                                context: context,
+                                builder: (_) => Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: const SizedBox(
+                                    height: 90.0,
+                                    width: double.infinity,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text("Pin Salah"),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                          } else if (widget.giveString!) {
+                            widget.onComplete!(_pinPutController.text);
+                          }
                           Navigator.pop(context);
-                          if (widget.onComplete != null) widget.onComplete!(null);
-                          showDialog(
-                            context: context,
-                            builder: (_) => OrderDoneDialog(voucher: widget.voucher),
-                          );
                         },
                         separator: Padding(
                           padding: const EdgeInsets.all(SpaceDims.sp4),
@@ -114,9 +145,15 @@ class _VPinDialogState extends State<VPinDialog> {
                     Padding(
                       padding: const EdgeInsets.only(left: SpaceDims.sp12),
                       child: GestureDetector(
-                        onTap: () => setState(() => _isHide = !_isHide),
-                        child: const Icon(Icons.visibility_off,
-                            color: ColorSty.grey),
+                        onTap: () => setState(() {
+                          _isHide = !_isHide;
+                          if (_isHide) {
+                            visibilityPinIcon = Icons.visibility;
+                          } else {
+                            visibilityPinIcon = Icons.visibility_off;
+                          }
+                        }),
+                        child: Icon(visibilityPinIcon, color: ColorSty.grey),
                       ),
                     )
                   ],

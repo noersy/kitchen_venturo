@@ -7,6 +7,9 @@ import 'package:kitchen/view/orders/detailvoucher_page.dart';
 import 'package:kitchen/view/orders/ongoingorder_page.dart';
 import 'package:kitchen/view/orders/ordersdetail_page.dart';
 import 'package:kitchen/view/orders/selection_vocher_page.dart';
+import 'package:kitchen/view/profile/penilaian/balasan_review.dart';
+import 'package:kitchen/view/profile/penilaian/daftar_penilaian.dart';
+import 'package:kitchen/view/profile/penilaian/penilaian.dart';
 
 class Navigate {
   static void toFindLocation(context) => Navigator.of(context)
@@ -36,4 +39,12 @@ class Navigate {
           {required Map<String, dynamic> dataOrders, bool? preparing}) =>
       Navigator.of(context).push(routeTransition(
           OrderDetailPage(dataOrder: dataOrders, preparing: preparing)));
+  static void toDaftarPenilaian(context) =>
+      Navigator.of(context).push(routeTransition(const DaftarPenilaian()));
+  static void toPenilaian(context) =>
+      Navigator.of(context).push(routeTransition(const Penilaian()));
+  static void toBalasanReview(context, idReviews) =>
+      Navigator.of(context).push(routeTransition(BalasanReview(
+        idReview: idReviews,
+      )));
 }
