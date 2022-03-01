@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kitchen/providers/lang_providers.dart';
+import 'package:kitchen/providers/order_providers.dart';
+import 'package:kitchen/singletons/google_tools.dart';
+import 'package:kitchen/singletons/shared_preferences.dart';
+import 'package:kitchen/singletons/user_instance.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
@@ -9,8 +13,21 @@ import 'package:kitchen/widget/detailmenu_sheet.dart';
 import 'package:kitchen/widget/vp_pin_dialog.dart';
 import 'package:provider/provider.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  _logout() {
+    Navigator.pushReplacementNamed(context, "/");
+    Preferences.getInstance().clear();
+    GoogleLogin.getInstance().logout();
+    UserInstance.getInstance().clear();
+    Provider.of<OrderProviders>(context, listen: false).clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +264,9 @@ class ProfilePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _logout();
+                          },
                           child: SizedBox(
                             width: 204,
                             child: Align(

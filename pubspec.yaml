@@ -48,6 +48,8 @@ dependencies:
   intl: ^0.17.0
   syncfusion_flutter_datepicker: ^19.4.53
   loadmore: ^2.0.1
+  shared_preferences: ^2.0.13
+  device_preview: ^1.0.0
 
 dev_dependencies:
   flutter_test:
