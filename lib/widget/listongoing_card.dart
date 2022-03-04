@@ -2,21 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kitchen/models/menudetail.dart';
 import 'package:kitchen/models/orderdetail.dart';
+import 'package:kitchen/providers/order_providers.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
+import 'package:provider/provider.dart';
 import '../view/orders/ongoingorder_page.dart';
 
 class ListOrderOngoing extends StatelessWidget {
   final String type, title;
   final orders;
   final orderStatus;
+  final idOrder;
   const ListOrderOngoing(
       {Key? key,
       required this.type,
       required this.title,
       required this.orders,
-      this.orderStatus})
+      this.orderStatus,
+      this.idOrder})
       : super(key: key);
 
   @override
@@ -51,7 +55,11 @@ class ListOrderOngoing extends StatelessWidget {
             children: [
               for (var item in orders)
                 // if (item["jenis"]?.compareTo(type) == 0)
-                CardMenuOngoing(data: item, orderStatus: orderStatus),
+                CardMenuOngoing(
+                  data: item,
+                  orderStatus: orderStatus,
+                  idOrder: idOrder,
+                ),
             ],
           ),
         ),
@@ -63,7 +71,9 @@ class ListOrderOngoing extends StatelessWidget {
 class CardMenuOngoing extends StatefulWidget {
   final data;
   final orderStatus;
-  CardMenuOngoing({Key? key, required this.data, this.orderStatus})
+  final idOrder;
+  CardMenuOngoing(
+      {Key? key, required this.data, this.orderStatus, this.idOrder})
       : super(key: key);
 
   @override
@@ -189,8 +199,18 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
                           showDialog(
                             barrierColor: ColorSty.grey.withOpacity(0.2),
                             context: context,
-                            builder: (_) => UpdateStatusDialog(
-                              onPressed: () {},
+                            builder: (BuildContext nwCtx) => UpdateStatusDialog(
+                              onPressed: () {
+                                print('id order: ${widget.idOrder}');
+                                // Navigator.pop(nwCtx);
+                                Provider.of<OrderProviders>(context,
+                                        listen: false)
+                                    .postBatalOrder(widget.idOrder)
+                                    .then((value) => {
+                                          Navigator.pop(nwCtx),
+                                          Navigator.pop(context)
+                                        });
+                              },
                               textButton: "Hapus",
                               title: "Hapus Item",
                               iconData: Icons.update,

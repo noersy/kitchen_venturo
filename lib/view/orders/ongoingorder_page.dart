@@ -71,6 +71,7 @@ class _DetailOrderState extends State<DetailOrder> {
             Column(
               children: [
                 ListOrderOngoing(
+                  idOrder:widget.dataOrder.idOrder,
                   orderStatus: widget.dataOrder.status,
                   orders: lDetailMenu,
                   title: 'Makanan',
