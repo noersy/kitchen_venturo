@@ -164,7 +164,18 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if (_jumlahOrder != 0)
+                    if (_jumlahOrder != 0 && widget.orderStatus != 0)
+                      Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Text(
+                          "$_jumlahOrder",
+                          style: TypoSty.subtitle.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20.0,
+                              color: ColorSty.black60),
+                        ),
+                      ),
+                    if (widget.orderStatus <= 1)
                       Text(
                         "$_jumlahOrder",
                         style: TypoSty.subtitle.copyWith(
@@ -195,7 +206,7 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
                             backgroundColor: Colors.transparent,
                             side: const BorderSide(color: ColorSty.primary)),
                         child: const Icon(Icons.clear),
-                      )
+                      ),
                   ],
                 ),
               )
