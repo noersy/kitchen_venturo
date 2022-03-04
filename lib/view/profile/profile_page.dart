@@ -137,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _saveImageProfile(_image) async {
     if (_image != null) {
-      _fileImage = await ImageCropper.cropImage(
+      _fileImage = await ImageCropper().cropImage(
           sourcePath: _image.path,
           cropStyle: CropStyle.circle,
           aspectRatioPresets: [
@@ -224,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _sendKTP(_image) async {
     if (_image != null) {
-      _fileImage = await ImageCropper.cropImage(
+      _fileImage = await ImageCropper().cropImage(
           sourcePath: _image.path,
           cropStyle: CropStyle.rectangle,
           aspectRatioPresets: [
