@@ -15,7 +15,8 @@ import '../../providers/order_providers.dart';
 class DetailOrder extends StatefulWidget {
   final Order dataOrder;
 
-  const DetailOrder({Key? key, required this.dataOrder}) : super(key: key);
+  const DetailOrder({Key? key, required this.dataOrder, orderStatus})
+      : super(key: key);
 
   @override
   State<DetailOrder> createState() => _DetailOrderState();
@@ -70,6 +71,7 @@ class _DetailOrderState extends State<DetailOrder> {
             Column(
               children: [
                 ListOrderOngoing(
+                  orderStatus: widget.dataOrder.status,
                   orders: lDetailMenu,
                   title: 'Makanan',
                   type: 'makanan',
@@ -95,8 +97,8 @@ class _DetailOrderState extends State<DetailOrder> {
           children: [
             const SizedBox(height: SpaceDims.sp24),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding:
@@ -328,6 +330,10 @@ class _DetailOrderState extends State<DetailOrder> {
           children: [
             if (_sudahDiTerima != text && _sudahDiTerima != 'pesanan selesai')
               SizedBox(
+                height: 8,
+              ),
+            if (_sudahDiTerima != text && _sudahDiTerima != 'pesanan selesai')
+              SizedBox(
                 height: 10,
                 width: 10,
                 child: DecoratedBox(
@@ -342,6 +348,9 @@ class _DetailOrderState extends State<DetailOrder> {
                 Icons.check_circle,
                 color: ColorSty.primary,
               ),
+            SizedBox(
+              height: 12,
+            ),
             Padding(
               padding: EdgeInsets.all(SpaceDims.sp2),
               child: SizedBox(

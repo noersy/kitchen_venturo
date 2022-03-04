@@ -96,6 +96,7 @@ class _OrdersPageState extends State<OrdersPage> {
                                   onPressed: () => Navigate.toDetailOrder(
                                       context,
                                       dataOrders: item,
+                                      orderStatus: item.status,
                                       onGoBack: onGoBack),
                                   date:
                                       item.tanggal.toString().substring(0, 10),

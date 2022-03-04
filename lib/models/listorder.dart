@@ -18,14 +18,14 @@ class ListOrder {
   final List<Order> data;
 
   factory ListOrder.fromJson(Map<String, dynamic> json) => ListOrder(
-    statusCode: json["status_code"],
-    data: List<Order>.from(json["data"].map((x) => Order.fromJson(x))),
-  );
+        statusCode: json["status_code"],
+        data: List<Order>.from(json["data"].map((x) => Order.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "status_code": statusCode,
-    "data": List<dynamic>.from(data.map((x) => x.toJson())),
-  };
+        "status_code": statusCode,
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+      };
 }
 
 class Order {
@@ -48,37 +48,38 @@ class Order {
   final List<Menu> menu;
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
-    idOrder: json["id_order"],
-    noStruk: json["no_struk"],
-    nama: json["nama"],
-    totalBayar: json["total_bayar"],
-    tanggal: DateTime.parse(json["tanggal"]),
-    status: json["status"],
-    menu: List<Menu>.from(json["menu"].map((x) => Menu.fromJson(x))),
-  );
+        idOrder: json["id_order"],
+        noStruk: json["no_struk"],
+        nama: json["nama"],
+        totalBayar: json["total_bayar"],
+        tanggal: DateTime.parse(json["tanggal"]),
+        status: json["status"],
+        menu: List<Menu>.from(json["menu"].map((x) => Menu.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "id_order": idOrder,
-    "no_struk": noStruk,
-    "nama": nama,
-    "total_bayar": totalBayar,
-    "tanggal": "${tanggal.year.toString().padLeft(4, '0')}-${tanggal.month.toString().padLeft(2, '0')}-${tanggal.day.toString().padLeft(2, '0')}",
-    "status": status,
-    "menu": List<dynamic>.from(menu.map((x) => x.toJson())),
-  };
+        "id_order": idOrder,
+        "no_struk": noStruk,
+        "nama": nama,
+        "total_bayar": totalBayar,
+        "tanggal":
+            "${tanggal.year.toString().padLeft(4, '0')}-${tanggal.month.toString().padLeft(2, '0')}-${tanggal.day.toString().padLeft(2, '0')}",
+        "status": status,
+        "menu": List<dynamic>.from(menu.map((x) => x.toJson())),
+      };
 }
 
 class Menu {
-  Menu({
-    required this.idMenu,
-    required this.kategori,
-    required this.nama,
-    this.foto,
-    required this.jumlah,
-    required this.harga,
-    required this.total,
-    this.catatan,
-  });
+  Menu(
+      {required this.idMenu,
+      required this.kategori,
+      required this.nama,
+      this.foto,
+      required this.jumlah,
+      required this.harga,
+      required this.total,
+      this.catatan,
+      this.status});
 
   final int idMenu;
   final String kategori;
@@ -88,26 +89,29 @@ class Menu {
   final String harga;
   final int total;
   final String? catatan;
+  final int? status;
 
   factory Menu.fromJson(Map<String, dynamic> json) => Menu(
-    idMenu: json["id_menu"],
-    kategori: json["kategori"],
-    nama: json["nama"],
-    foto: json["foto"],
-    jumlah: json["jumlah"],
-    harga: json["harga"],
-    total: json["total"],
-    catatan: json["catatan"],
-  );
+        idMenu: json["id_menu"],
+        kategori: json["kategori"],
+        nama: json["nama"],
+        foto: json["foto"],
+        jumlah: json["jumlah"],
+        harga: json["harga"],
+        total: json["total"],
+        catatan: json["catatan"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id_menu": idMenu,
-    "kategori": kategori,
-    "nama": nama,
-    "foto": foto,
-    "jumlah": jumlah,
-    "harga": harga,
-    "total": total,
-    "catatan": catatan,
-  };
+        "id_menu": idMenu,
+        "kategori": kategori,
+        "nama": nama,
+        "foto": foto,
+        "jumlah": jumlah,
+        "harga": harga,
+        "total": total,
+        "catatan": catatan,
+        "status": status,
+      };
 }

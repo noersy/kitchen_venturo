@@ -79,7 +79,7 @@ class OrderDetailPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
-                          children:  [
+                          children: [
                             Text(
                               "Total Pesanan",
                               style: TypoSty.captionSemiBold,
@@ -141,7 +141,7 @@ class OrderDetailPage extends StatelessWidget {
                           TileListDMenu(
                             dense: true,
                             title: "Pembayaran",
-                            prefix: "Pay Leter",
+                            prefix: "Pay Later",
                             icon: IconsCs.coins,
                             onPressed: () {},
                           ),

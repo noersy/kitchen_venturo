@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kitchen/models/menudetail.dart';
+import 'package:kitchen/models/orderdetail.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
@@ -9,13 +10,14 @@ import '../view/orders/ongoingorder_page.dart';
 class ListOrderOngoing extends StatelessWidget {
   final String type, title;
   final orders;
-
-  const ListOrderOngoing({
-    Key? key,
-    required this.type,
-    required this.title,
-    required this.orders,
-  }) : super(key: key);
+  final orderStatus;
+  const ListOrderOngoing(
+      {Key? key,
+      required this.type,
+      required this.title,
+      required this.orders,
+      this.orderStatus})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class ListOrderOngoing extends StatelessWidget {
             children: [
               for (var item in orders)
                 // if (item["jenis"]?.compareTo(type) == 0)
-                CardMenuOngoing(data: item),
+                CardMenuOngoing(data: item, orderStatus: orderStatus),
             ],
           ),
         ),
@@ -60,11 +62,9 @@ class ListOrderOngoing extends StatelessWidget {
 
 class CardMenuOngoing extends StatefulWidget {
   final data;
-
-  const CardMenuOngoing({
-    Key? key,
-    required this.data,
-  }) : super(key: key);
+  final orderStatus;
+  CardMenuOngoing({Key? key, required this.data, this.orderStatus})
+      : super(key: key);
 
   @override
   State<CardMenuOngoing> createState() => _CardMenuOngoingState();
@@ -77,6 +77,7 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
 
   @override
   void initState() {
+    print('type: ${widget.orderStatus}');
     _jumlahOrder = widget.data.jumlah ?? 0;
     nama = widget.data.nama ?? "";
     url = widget.data.foto;
@@ -171,29 +172,30 @@ class _CardMenuOngoingState extends State<CardMenuOngoing> {
                             fontSize: 20.0,
                             color: ColorSty.black60),
                       ),
-                    TextButton(
-                      onPressed: () {
-                        showDialog(
-                          barrierColor: ColorSty.grey.withOpacity(0.2),
-                          context: context,
-                          builder: (_) => UpdateStatusDialog(
-                            onPressed: () {},
-                            textButton: "Hapus",
-                            title: "Hapus Item",
-                            iconData: Icons.update,
-                            caption:
-                                "Apakah anda yakin akan\nmenghapus item tersbut",
-                          ),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: const Size(25, 25),
-                          primary: ColorSty.primary,
-                          backgroundColor: Colors.transparent,
-                          side: const BorderSide(color: ColorSty.primary)),
-                      child: const Icon(Icons.clear),
-                    )
+                    if (widget.orderStatus <= 1)
+                      TextButton(
+                        onPressed: () {
+                          showDialog(
+                            barrierColor: ColorSty.grey.withOpacity(0.2),
+                            context: context,
+                            builder: (_) => UpdateStatusDialog(
+                              onPressed: () {},
+                              textButton: "Hapus",
+                              title: "Hapus Item",
+                              iconData: Icons.update,
+                              caption:
+                                  "Apakah anda yakin akan\nmenghapus item tersbut",
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: const Size(25, 25),
+                            primary: ColorSty.primary,
+                            backgroundColor: Colors.transparent,
+                            side: const BorderSide(color: ColorSty.primary)),
+                        child: const Icon(Icons.clear),
+                      )
                   ],
                 ),
               )

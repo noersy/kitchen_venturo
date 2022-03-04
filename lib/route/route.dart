@@ -31,9 +31,11 @@ class Navigate {
   //         {required Map<String, dynamic> data, required int countOrder}) =>
   //     Navigator.of(context).push(
   //         routeTransition(DetailMenu(data: data, countOrder: countOrder)));
-  static void toDetailOrder(context, {required dataOrders, onGoBack}) =>
+  static void toDetailOrder(context,
+          {required dataOrders, orderStatus, onGoBack}) =>
       Navigator.of(context)
-          .push(routeTransition(DetailOrder(dataOrder: dataOrders)))
+          .push(routeTransition(
+              DetailOrder(dataOrder: dataOrders, orderStatus: orderStatus)))
           .then((onGoBack));
   static void toViewOrderKasir(context,
           {required Map<String, dynamic> dataOrders, bool? preparing}) =>
