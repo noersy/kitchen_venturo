@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -188,7 +189,6 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: _login,
                           bgColors: ColorSty.primary,
                         ),
-                        SizedBox(height: 40.0.h),
                         Row(
                           children: [
                             const Expanded(
@@ -211,23 +211,33 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: SpaceDims.sp16.h),
-                        ButtonLogin(
-                          title: 'Masuk menggunakan',
-                          boldTitle: "Google",
-                          bgColors: ColorSty.white,
-                          icon: "assert/image/icon_google.png",
-                          onPressed: _loginWithGoogle,
-                        ),
-                        SizedBox(height: SpaceDims.sp8.h),
-                        ButtonLogin(
-                          title: 'Masuk menggunakan',
-                          boldTitle: "Apple",
-                          icon: "assert/image/icon_apple.png",
-                          bgColors: ColorSty.black,
-                          onPressed: () {},
-                        ),
-                        SizedBox(height: SpaceDims.sp22.h)
+                        if (Platform.isAndroid)
+                          Column(
+                            children: [
+                              ButtonLogin(
+                                title: 'Masuk menggunakan',
+                                boldTitle: "Google",
+                                bgColors: ColorSty.white,
+                                icon: "assert/image/icon_google.png",
+                                onPressed: _loginWithGoogle,
+                              ),
+                              SizedBox(height: SpaceDims.sp8.h),
+                            ],
+                          ),
+                        if (Platform.isIOS)
+                          Column(
+                            children: [
+                              ButtonLogin(
+                                title: 'Masuk menggunakan',
+                                boldTitle: "Apple",
+                                icon: "assert/image/icon_apple.png",
+                                bgColors: ColorSty.black,
+                                onPressed: () {},
+                              ),
+                              SizedBox(height: SpaceDims.sp22.h)
+                            ],
+                          ),
+                        SizedBox(height: 40.0.h),
                       ],
                     ),
                   ),
