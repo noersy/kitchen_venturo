@@ -30,7 +30,8 @@ class ConstLang {
         penilaian: "Rating",
         nilai_sekarang: "Rate Now",
         versiAplikasi: 'Version',
-        namaPerangkat: 'Device Info'),
+        namaPerangkat: 'Device Info',
+        logout: 'Sign Out'),
     pesanan: LangPesanan(
       tittle: 'Orders',
       tap: "Ongoing",
@@ -81,7 +82,8 @@ class ConstLang {
         penilaian: "Penilaian",
         nilai_sekarang: "Nilai Sekarang",
         versiAplikasi: 'Versi',
-        namaPerangkat: 'Info Perangkat'),
+        namaPerangkat: 'Info Perangkat',
+        logout: 'Sign Out'),
     pesanan: LangPesanan(
       tittle: 'Pesanan',
       tap: "Sedang Berjalan",

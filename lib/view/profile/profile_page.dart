@@ -611,7 +611,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     width: 204,
                                     child: Align(
                                       alignment: Alignment.center,
-                                      child: Text("Log Out",
+                                      child: Text(Provider.of<LangProviders>(context).lang.profile.logout,
                                           style: TypoSty.button),
                                     ),
                                   ),

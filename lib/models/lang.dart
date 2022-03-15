@@ -42,7 +42,8 @@ class LangProfile {
       penilaian,
       nilai_sekarang,
       versiAplikasi,
-      namaPerangkat;
+      namaPerangkat,
+      logout;
   final String title, subtitle, subtitle2;
 
   final ProfileCation caption;
@@ -65,7 +66,8 @@ class LangProfile {
       required this.penilaian,
       required this.nilai_sekarang,
       required this.versiAplikasi,
-      required this.namaPerangkat});
+      required this.namaPerangkat,
+      required this.logout});
 }
 
 class ProfileCation {
