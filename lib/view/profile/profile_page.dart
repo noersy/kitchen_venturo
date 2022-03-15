@@ -468,6 +468,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       TileListProfile(
                                         title: 'Email',
                                         suffix: _user?.email ?? ' ',
+                                        enable: false,
+                                        penIcon: false,
                                       ),
                                       TileListProfile(
                                         title: '${lang.profile.ub} PIN',
