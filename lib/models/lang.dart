@@ -35,6 +35,7 @@ class LangProfile {
       bhs,
       penilaian,
       nilai_sekarang,
+      versiAplikasi,
       namaPerangkat;
   final String title, subtitle, subtitle2;
 
@@ -57,6 +58,7 @@ class LangProfile {
       required this.bhs,
       required this.penilaian,
       required this.nilai_sekarang,
+      required this.versiAplikasi,
       required this.namaPerangkat});
 }
 

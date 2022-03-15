@@ -270,7 +270,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    // getInfoDevice();
+    getInfoDevice();
     super.initState();
   }
 
@@ -570,8 +570,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       TileListProfile(
                                         enable: false,
-                                        title: 'Version',
-                                        suffix: _packageInfo?.version ?? '',
+                                        title:
+                                            Provider.of<LangProviders>(context)
+                                                .lang
+                                                .profile
+                                                .versiAplikasi,
+                                        suffix: '1.0',
                                       ),
                                     ],
                                   ),

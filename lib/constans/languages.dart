@@ -28,6 +28,7 @@ class ConstLang {
         bhs: "Change Language",
         penilaian: "Rating",
         nilai_sekarang: "Rate Now",
+        versiAplikasi: 'Version',
         namaPerangkat: 'Device Info'),
     pesanan: LangPesanan(
       tap: "Ongoing",
@@ -76,6 +77,7 @@ class ConstLang {
         bhs: "Ganti Bahasa",
         penilaian: "Penilaian",
         nilai_sekarang: "Nilai Sekarang",
+        versiAplikasi: 'Versi',
         namaPerangkat: 'Info Perangkat'),
     pesanan: LangPesanan(
       tap: "Sedang Berjalan",
