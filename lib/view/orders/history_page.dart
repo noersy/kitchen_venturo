@@ -230,7 +230,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             : OrderHistoryCard(
                                 onPressed: () {
                                   Navigate.toDetailOrder(context,
-                                      dataOrders: item);
+                                      dataOrders: item, showHistory: true);
                                 },
                                 data: item,
                               ),

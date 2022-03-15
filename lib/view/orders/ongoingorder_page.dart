@@ -14,8 +14,9 @@ import '../../providers/order_providers.dart';
 
 class DetailOrder extends StatefulWidget {
   final Order dataOrder;
-
-  const DetailOrder({Key? key, required this.dataOrder, orderStatus})
+  bool? showHistory;
+  DetailOrder(
+      {Key? key, required this.dataOrder, orderStatus, this.showHistory})
       : super(key: key);
 
   @override
@@ -71,7 +72,7 @@ class _DetailOrderState extends State<DetailOrder> {
             Column(
               children: [
                 ListOrderOngoing(
-                  idOrder:widget.dataOrder.idOrder,
+                  idOrder: widget.dataOrder.idOrder,
                   orderStatus: widget.dataOrder.status,
                   orders: lDetailMenu,
                   title: 'Makanan',
@@ -163,9 +164,12 @@ class _DetailOrderState extends State<DetailOrder> {
                           onPressed: () {},
                         ),
                         const SizedBox(height: SpaceDims.sp4),
-                        if (_sudahDiTerima == 'belum')
+                        if (_sudahDiTerima == 'belum' &&
+                            widget.showHistory != true)
                           buttonTerimaBatalPesanan(context),
-                        if (_sudahDiTerima != 'belum') StatusBar(context),
+                        if (_sudahDiTerima != 'belum' &&
+                            widget.showHistory != true)
+                          StatusBar(context),
                       ],
                     ),
                   )
