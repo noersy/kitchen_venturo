@@ -561,8 +561,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       TileListProfile(
                                         top: false,
                                         enable: false,
-                                        title: 'Device Info',
-                                        suffix: _androidInfo?.product ?? "",
+                                        title:
+                                            Provider.of<LangProviders>(context)
+                                                .lang
+                                                .profile
+                                                .namaPerangkat,
+                                        suffix: _androidInfo?.model ?? "",
                                       ),
                                       TileListProfile(
                                         enable: false,

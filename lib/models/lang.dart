@@ -34,29 +34,30 @@ class LangProfile {
       lm,
       bhs,
       penilaian,
-      nilai_sekarang;
+      nilai_sekarang,
+      namaPerangkat;
   final String title, subtitle, subtitle2;
 
   final ProfileCation caption;
 
-  LangProfile({
-    required this.nam,
-    required this.tgl,
-    required this.tlp,
-    required this.ub,
-    required this.ro,
-    required this.role,
-    required this.role2,
-    required this.subtitle,
-    required this.subtitle2,
-    required this.caption,
-    required this.title,
-    required this.br,
-    required this.lm,
-    required this.bhs,
-    required this.penilaian,
-    required this.nilai_sekarang,
-  });
+  LangProfile(
+      {required this.nam,
+      required this.tgl,
+      required this.tlp,
+      required this.ub,
+      required this.ro,
+      required this.role,
+      required this.role2,
+      required this.subtitle,
+      required this.subtitle2,
+      required this.caption,
+      required this.title,
+      required this.br,
+      required this.lm,
+      required this.bhs,
+      required this.penilaian,
+      required this.nilai_sekarang,
+      required this.namaPerangkat});
 }
 
 class ProfileCation {
