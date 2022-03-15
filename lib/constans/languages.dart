@@ -2,6 +2,7 @@ import 'package:kitchen/models/lang.dart';
 
 class ConstLang {
   static Lang eng = Lang(
+    riwayat: LangHistory(tittle: 'History'),
     bottomNav: BottomNav(
       nav1: "Home",
       nav2: "Orders",
@@ -52,6 +53,7 @@ class ConstLang {
   );
 
   static Lang ind = Lang(
+    riwayat: LangHistory(tittle: 'Riwayat'),
     bottomNav: BottomNav(
       nav1: "Beranda",
       nav2: "Pesanan",
@@ -80,7 +82,8 @@ class ConstLang {
         nilai_sekarang: "Nilai Sekarang",
         versiAplikasi: 'Versi',
         namaPerangkat: 'Info Perangkat'),
-    pesanan: LangPesanan(tittle: 'Pesanan',
+    pesanan: LangPesanan(
+      tittle: 'Pesanan',
       tap: "Sedang Berjalan",
       tap2: "Riwayat",
       mini: "Sedang Dipersiapkan",

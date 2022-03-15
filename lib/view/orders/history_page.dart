@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kitchen/providers/lang_providers.dart';
 import 'package:kitchen/route/route.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/icons_cs_icons.dart';
@@ -120,9 +121,9 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CostumeAppBar(
+      appBar: CostumeAppBar(
         title: "",
-        profileTitle: "Riwayat",
+        profileTitle: Provider.of<LangProviders>(context).lang.riwayat.tittle,
         dense: true,
       ),
       body: SmartRefresher(

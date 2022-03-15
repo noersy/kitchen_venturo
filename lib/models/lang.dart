@@ -4,12 +4,18 @@ class Lang {
   final BottomNav bottomNav;
   final LangProfile profile;
   final LangPesanan pesanan;
+  final LangHistory riwayat;
 
-  Lang({
-    required this.bottomNav,
-    required this.profile,
-    required this.pesanan,
-  });
+  Lang(
+      {required this.bottomNav,
+      required this.profile,
+      required this.pesanan,
+      required this.riwayat});
+}
+
+class LangHistory {
+  final String tittle;
+  LangHistory({required this.tittle});
 }
 
 class BottomNav {
