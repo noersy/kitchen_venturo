@@ -342,14 +342,21 @@ class OrderHistoryCard extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            "Rp 20.000",
-                            style: TypoSty.mini.copyWith(
-                                fontSize: 14.0, color: ColorSty.primary),
-                          ),
+                          if (data.totalBayar == 0)
+                            Text(
+                              'Gratis | Voucher',
+                              style: TypoSty.mini.copyWith(
+                                  fontSize: 14.0, color: ColorSty.primary),
+                            ),
+                          if (data.totalBayar != 0)
+                            Text(
+                              '${data.totalBayar}',
+                              style: TypoSty.mini.copyWith(
+                                  fontSize: 14.0, color: ColorSty.primary),
+                            ),
                           const SizedBox(width: SpaceDims.sp8),
                           Text(
-                            "(3 Menu)",
+                            '(${data.menu.length} menu)',
                             style: TypoSty.mini.copyWith(
                               fontSize: 14.0,
                               color: ColorSty.grey,
