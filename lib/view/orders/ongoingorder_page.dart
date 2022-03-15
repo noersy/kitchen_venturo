@@ -151,7 +151,7 @@ class _DetailOrderState extends State<DetailOrder> {
                           TileListDMenu(
                             dense: true,
                             title: "Pembayaran",
-                            prefix: "Pay Leter",
+                            prefix: "Pay Later",
                             icon: IconsCs.coins,
                             onPressed: () {},
                           ),
