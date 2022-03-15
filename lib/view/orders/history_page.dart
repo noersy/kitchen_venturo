@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kitchen/route/route.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/icons_cs_icons.dart';
 import 'package:kitchen/theme/spacing.dart';
@@ -227,7 +228,10 @@ class _HistoryPageState extends State<HistoryPage> {
                         _loading
                             ? const SkeletonOrderCad()
                             : OrderHistoryCard(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigate.toDetailOrder(context,
+                                      dataOrders: item);
+                                },
                                 data: item,
                               ),
                     // for (var item

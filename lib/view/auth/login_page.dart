@@ -118,7 +118,8 @@ class _LoginPageState extends State<LoginPage> {
 
       if (mounted) {
         Timer(_duration, () {
-          Navigate.toFindLocation(context);
+          // Navigate.toFindLocation(context);
+          Navigate.toDashboard(context);
           setState(() => _loading = false);
         });
       }
