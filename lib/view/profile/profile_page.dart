@@ -199,29 +199,37 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   _changePin(Lang lang) {
+    var value1;
+    print('_changePin');
     showDialog(
       context: context,
       builder: (_) => VPinDialog(
+        firstChangePin: true,
         title: lang.profile.lm,
         onComplete: (value) {
-          if (value.runtimeType != bool) return;
-          if ((value as bool)) {
-            showDialog(
-              context: context,
-              builder: (_) => VPinDialog(
-                title: lang.profile.br,
-                giveString: true,
-                onComplete: (value) {
-                  if (value.runtimeType != String) return;
-
-                  provider.update(key: "pin", value: "$value");
-                },
-              ),
-            );
-          }
+          value1 = value;
+          print('1 complete: $value');
+          Navigator.pop(context);
         },
       ),
-    );
+    ).then((value) {
+      if (value1 == true) {
+        print('2 complete: $value');
+        showDialog(
+          context: context,
+          builder: (_) => VPinDialog(
+            title: lang.profile.br,
+            giveString: true,
+            onComplete: (value) {
+              print('2 complete:$value');
+              if (value.runtimeType != String) return;
+              provider.update(key: "pin", value: "$value");
+              Navigator.pop(context);
+            },
+          ),
+        );
+      }
+    });
   }
 
   _sendKTP(_image) async {
@@ -611,7 +619,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                     width: 204,
                                     child: Align(
                                       alignment: Alignment.center,
-                                      child: Text(Provider.of<LangProviders>(context).lang.profile.logout,
+                                      child: Text(
+                                          Provider.of<LangProviders>(context)
+                                              .lang
+                                              .profile
+                                              .logout,
                                           style: TypoSty.button),
                                     ),
                                   ),

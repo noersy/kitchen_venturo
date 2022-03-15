@@ -12,14 +12,18 @@ class VPinDialog extends StatefulWidget {
   final String? title;
   final bool? giveString;
   final ValueChanged<Object>? onComplete;
+  final bool? pesananPin;
+  final bool? firstChangePin;
 
-  const VPinDialog({
-    Key? key,
-    this.voucher,
-    this.title = "Verifikasi Pesanan",
-    this.onComplete,
-    this.giveString = false,
-  }) : super(key: key);
+  const VPinDialog(
+      {Key? key,
+      this.voucher,
+      this.title = "Verifikasi Pesanan",
+      this.onComplete,
+      this.giveString = false,
+      this.pesananPin,
+      this.firstChangePin})
+      : super(key: key);
 
   @override
   State<VPinDialog> createState() => _VPinDialogState();
@@ -88,13 +92,33 @@ class _VPinDialogState extends State<VPinDialog> {
                           if (user == null) return;
                           final correct =
                               user.data.pin == _pinPutController.text;
-                          Navigator.pop(context, correct);
-                          // print('correct $correct');
+                          if (widget.pesananPin == true) {
+                            Navigator.pop(context, correct == true);
+                          }
+                          print('giveString ${widget.giveString}');
+                          if (correct == false) {
+                            showDialog(
+                              context: context,
+                              builder: (_) => Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                child: const SizedBox(
+                                  height: 90.0,
+                                  width: double.infinity,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text("Pin Salah"),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
                           if (widget.onComplete != null &&
                               !widget.giveString!) {
                             widget.onComplete!(correct);
 
-                            if (!correct) {
+                            if (correct == false) {
                               showDialog(
                                 context: context,
                                 builder: (_) => Dialog(
@@ -115,7 +139,9 @@ class _VPinDialogState extends State<VPinDialog> {
                           } else if (widget.giveString!) {
                             widget.onComplete!(_pinPutController.text);
                           }
-                          Navigator.pop(context);
+                          if (widget.firstChangePin != true) {
+                            Navigator.pop(context);
+                          }
                         },
                         separator: Padding(
                           padding: const EdgeInsets.all(SpaceDims.sp4),
