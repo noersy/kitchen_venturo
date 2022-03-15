@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "472874136273",
+    "project_id": "kitchen-10322",
+    "storage_bucket": "kitchen-10322.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472874136273:android:dec299a0642efd8fc28bf0",
+        "android_client_info": {
+          "package_name": "com.venturo.kitchen.kitchen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472874136273-50utocnsnohifl881qh37d0vhp0saoch.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.venturo.kitchen.kitchen",
+            "certificate_hash": "bdded3af0d7f013c8746afa2aa8ba423f5798759"
+          }
+        },
+        {
+          "client_id": "472874136273-70aidlpldclt4cdbu16jmgfv2otdriea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCe2qqWUvHXBjpTBCQFYOtzGU5W5WiVWRM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472874136273-70aidlpldclt4cdbu16jmgfv2otdriea.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

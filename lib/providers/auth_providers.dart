@@ -26,6 +26,55 @@ class AuthProviders extends ChangeNotifier {
     return null;
   }
 
+  Future<bool> loginGoogle(
+    String email, {
+    bool? isGoogle = true,
+    String? nama = "",
+  }) async {
+    var editResponse;
+    final Uri _api = Uri.http(host, "$sub/api/auth/login");
+    try {
+      final body = <String, dynamic>{
+        "email": email,
+        "nama": nama,
+        "is_google": isGoogle! ? "is_google" : "",
+      };
+
+      _log.fine("Tray to login." + '\n$email' + '\n$nama');
+      final response = await http.post(
+        _api,
+        headers: _headers,
+        body: json.encode(body),
+      );
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status_code"] == 200) {
+        editResponse = json.decode(response.body);
+        if (json.decode(response.body)["data"]["user"]["foto"] == null) {
+          editResponse["data"]["user"]["foto"] =
+              '''https://javacode.landa.id/img/1/review/review_1_620e0269b96d2.png''';
+          editResponse = json.encode(editResponse);
+        }
+        _loginUser = loginUserFromJson(editResponse.toString());
+        if (_loginUser == null) _log.info("Login failed");
+        if (_loginUser != null) _log.fine("Login successes");
+
+        Preferences.getInstance()
+            .setIntValue(KeyPrefens.loginID, _loginUser!.data.user.idUser);
+        getUser(id: _loginUser!.data.user.idUser);
+        notifyListeners();
+        if (_loginUser != null) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } catch (e, r) {
+      _log.warning(e);
+      _log.warning(r);
+    }
+    return false;
+  }
+
   Future<bool> login(
     String email,
     String? password, {
@@ -51,7 +100,7 @@ class AuthProviders extends ChangeNotifier {
           json.decode(response.body)["status_code"] == 200) {
         _loginUser = loginUserFromJson(response.body);
         if (_loginUser == null) _log.info("Login failed");
-        if (_loginUser != null) _log.fine("Login successes"); 
+        if (_loginUser != null) _log.fine("Login successes");
         Preferences.getInstance()
             .setIntValue(KeyPrefens.loginID, _loginUser!.data.user.idUser);
         getUser(id: _loginUser!.data.user.idUser);
