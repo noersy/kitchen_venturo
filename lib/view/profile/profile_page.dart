@@ -567,6 +567,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 .profile
                                                 .namaPerangkat,
                                         suffix: _androidInfo?.model ?? "",
+                                        penIcon: false,
                                       ),
                                       TileListProfile(
                                         enable: false,
@@ -576,6 +577,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 .profile
                                                 .versiAplikasi,
                                         suffix: '1.0',
+                                        penIcon: false,
                                       ),
                                     ],
                                   ),
@@ -624,8 +626,9 @@ class TileListProfile extends StatefulWidget {
   final Function()? onPressed;
   final Function(String value)? onSubmit;
   final bool? btn;
+  final bool? penIcon;
 
-  const TileListProfile(
+  TileListProfile(
       {Key? key,
       this.top = true,
       this.bottom = false,
@@ -634,7 +637,8 @@ class TileListProfile extends StatefulWidget {
       this.onPressed,
       this.enable = true,
       this.onSubmit,
-      this.btn})
+      this.btn,
+      this.penIcon})
       : super(key: key);
 
   @override
@@ -742,7 +746,7 @@ class _TileListProfileState extends State<TileListProfile> {
                             ),
                           ),
                         ),
-                      if (widget.btn == null)
+                      if (widget.btn == null && widget.penIcon != false)
                         const Icon(
                           Icons.edit,
                           color: ColorSty.grey,
