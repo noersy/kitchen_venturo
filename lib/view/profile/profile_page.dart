@@ -41,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
   static final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   static AndroidDeviceInfo? _androidInfo;
   static PackageInfo? _packageInfo;
+  static IosDeviceInfo? _iosDeviceInfo;
   static final ImagePicker _picker = ImagePicker();
   static File? _fileImage;
   static final DateFormat _dateFormat = DateFormat('dd/MM/yy');
@@ -50,7 +51,8 @@ class _ProfilePageState extends State<ProfilePage> {
       RefreshController(initialRefresh: false);
 
   getInfoDevice() async {
-    _androidInfo = await deviceInfo.androidInfo;
+    if (Platform.isAndroid) _androidInfo = await deviceInfo.androidInfo;
+    if (Platform.isIOS) _iosDeviceInfo = await deviceInfo.iosInfo;
     _packageInfo = await PackageInfo.fromPlatform();
     setState(() {});
   }
@@ -558,17 +560,32 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                   child: Column(
                                     children: [
-                                      TileListProfile(
-                                        top: false,
-                                        enable: false,
-                                        title:
-                                            Provider.of<LangProviders>(context)
-                                                .lang
-                                                .profile
-                                                .namaPerangkat,
-                                        suffix: _androidInfo?.model ?? "",
-                                        penIcon: false,
-                                      ),
+                                      if (Platform.isAndroid)
+                                        TileListProfile(
+                                          top: false,
+                                          enable: false,
+                                          title: Provider.of<LangProviders>(
+                                                  context)
+                                              .lang
+                                              .profile
+                                              .namaPerangkat,
+                                          suffix:
+                                              _androidInfo?.model ?? "Emulator",
+                                          penIcon: false,
+                                        ),
+                                      if (Platform.isIOS)
+                                        TileListProfile(
+                                          top: false,
+                                          enable: false,
+                                          title: Provider.of<LangProviders>(
+                                                  context)
+                                              .lang
+                                              .profile
+                                              .namaPerangkat,
+                                          suffix: _iosDeviceInfo?.name ??
+                                              "Simulator",
+                                          penIcon: false,
+                                        ),
                                       TileListProfile(
                                         enable: false,
                                         title:
