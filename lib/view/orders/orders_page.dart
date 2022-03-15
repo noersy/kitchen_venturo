@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:kitchen/providers/lang_providers.dart';
 import 'package:kitchen/providers/order_providers.dart';
 import 'package:kitchen/route/route.dart';
 import 'package:kitchen/theme/colors.dart';
@@ -63,9 +64,9 @@ class _OrdersPageState extends State<OrdersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CostumeAppBar(
+      appBar: CostumeAppBar(
         title: "",
-        profileTitle: "Pesanan",
+        profileTitle: Provider.of<LangProviders>(context).lang.pesanan.tittle,
         dense: true,
       ),
       body: SmartRefresher(

@@ -31,6 +31,7 @@ class ConstLang {
         versiAplikasi: 'Version',
         namaPerangkat: 'Device Info'),
     pesanan: LangPesanan(
+      tittle: 'Orders',
       tap: "Ongoing",
       tap2: "History",
       mini: "Being Prepared",
@@ -79,7 +80,7 @@ class ConstLang {
         nilai_sekarang: "Nilai Sekarang",
         versiAplikasi: 'Versi',
         namaPerangkat: 'Info Perangkat'),
-    pesanan: LangPesanan(
+    pesanan: LangPesanan(tittle: 'Pesanan',
       tap: "Sedang Berjalan",
       tap2: "Riwayat",
       mini: "Sedang Dipersiapkan",

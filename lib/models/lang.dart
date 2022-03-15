@@ -73,6 +73,7 @@ class ProfileCation {
 }
 
 class LangPesanan {
+  final String tittle;
   final String tap, tap2;
   final String mini, ongoingCaption;
   final String riwayatCaption, riwayatCaption2;
@@ -81,6 +82,7 @@ class LangPesanan {
   final String totalOr;
 
   LangPesanan({
+    required this.tittle,
     required this.tap,
     required this.tap2,
     required this.ongoingCaption,
