@@ -24,7 +24,6 @@ class _BalasanReviewState extends State<BalasanReview> {
     listChat.clear();
     Future data = getAllChat(widget.idReview);
     data.then((value) {
-      print('loadChat: $value');
       Map json = jsonDecode(value);
       // print('json: ${json['data']}');
       var jsonData = json['data'];
@@ -141,10 +140,10 @@ class _BalasanReviewState extends State<BalasanReview> {
                                       hintText: 'Tulis Pesan ...'),
                                 ),
                               ),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                      Icons.add_photo_alternate_outlined)),
+                              // IconButton(
+                              //     onPressed: () {},
+                              //     icon:
+                              //         const Icon(Icons.add_photo_alternate_outlined)),
                             ],
                           ),
                         ),
@@ -185,25 +184,40 @@ class _BalasanReviewState extends State<BalasanReview> {
     var colorBoxChat = const Color.fromRGBO(223, 239, 241, 0.5);
     // ignore: prefer_typing_uninitialized_variables
     var timeBoxChat;
-    if (positionBox == true) {
-      positionBox = Alignment.topRight;
+    // ignore: prefer_typing_uninitialized_variables
+    var contentChatt;
+    if (positionBox == false) {
+      positionBox = Alignment.centerRight;
       colorBoxChat = const Color.fromRGBO(223, 239, 241, 0.5);
-      timeBoxChat = Row(children: [
+      timeBoxChat = Row(mainAxisSize: MainAxisSize.min, children: [
         Text(
           listChat[index].created_at.toString().substring(12, 17),
         ),
-        const Icon(Icons.person)
+        const Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Icon(Icons.person),
+        )
       ]);
-    } else if (positionBox == false) {
+      contentChatt = Padding(
+        padding: const EdgeInsets.only(right: 10, left: 10, top: 0, bottom: 10),
+        child: Text(
+          '${listChat[index].answer}',
+          textAlign: TextAlign.justify,
+        ),
+      );
+    } else if (positionBox == true) {
       positionBox = Alignment.centerLeft;
       colorBoxChat = const Color.fromRGBO(240, 240, 240, 0.5);
       timeBoxChat = Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const Icon(
-              Icons.person,
-              color: Color.fromRGBO(0, 154, 173, 1),
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Icon(
+                Icons.person,
+                color: Color.fromRGBO(0, 154, 173, 1),
+              ),
             ),
             Text(
               '${listChat[index].nama} ',
@@ -211,44 +225,46 @@ class _BalasanReviewState extends State<BalasanReview> {
                 color: Color.fromRGBO(0, 154, 173, 1),
               ),
             ),
-            const Text(
-              '05.05',
+            Text(
+              listChat[index].created_at.toString().substring(12, 17),
               textAlign: TextAlign.right,
             ),
           ]);
+      contentChatt = Padding(
+        padding: const EdgeInsets.only(bottom: 8.0, right: 10, left: 20),
+        child: Text(
+          '${listChat[index].answer}',
+          textAlign: TextAlign.justify,
+        ),
+      );
     }
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(10),
       child: Align(
         alignment: positionBox,
-        child: FittedBox(
-          child: Container(
-              decoration: BoxDecoration(
-                  color: colorBoxChat,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(40.0),
-                    topRight: Radius.circular(40.0),
-                    bottomLeft: Radius.circular(40.0),
-                    bottomRight: Radius.circular(40.0),
-                  )),
-              child: Column(
-                children: [
-                  timeBoxChat,
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 8.0, right: 10, left: 20),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        '${listChat[index].answer}',
-                        textAlign: TextAlign.justify,
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-        ),
+        child: Container(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * .70,
+                minWidth: MediaQuery.of(context).size.width * .20),
+            decoration: BoxDecoration(
+                color: colorBoxChat,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(40.0),
+                  topRight: Radius.circular(40.0),
+                  bottomLeft: Radius.circular(40.0),
+                  bottomRight: Radius.circular(40.0),
+                )),
+            child: widgetBubbleChat(
+                timeBoxChat, contentChatt, listChat[index].is_customer)),
       ),
+    );
+  }
+
+  Column widgetBubbleChat(timeBoxChat, contentChatt, positionBox) {
+    return Column(
+      crossAxisAlignment:
+          positionBox ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+      children: [timeBoxChat, contentChatt],
     );
   }
 }
