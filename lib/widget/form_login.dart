@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
@@ -36,16 +35,17 @@ class _FormLoginState extends State<FormLogin> {
             TextFormField(
               controller: widget.editingController,
               keyboardType: widget.type,
-              obscureText: widget.type == TextInputType.visiblePassword && isHide
-                  ? true
-                  : false,
+              obscureText:
+                  widget.type == TextInputType.visiblePassword && isHide
+                      ? true
+                      : false,
               decoration: InputDecoration(
                 isDense: true,
                 hintText: widget.hint,
-                hintStyle: TypoSty.caption2,
+                hintStyle: TypoSty.caption3,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 contentPadding:
-                const EdgeInsets.symmetric(vertical: SpaceDims.sp8),
+                    const EdgeInsets.symmetric(vertical: SpaceDims.sp8),
                 border: const UnderlineInputBorder(
                   borderSide: BorderSide(color: ColorSty.primary),
                 ),

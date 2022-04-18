@@ -1,4 +1,3 @@
-
 import 'package:kitchen/constans/key_prefens.dart';
 import 'package:kitchen/models/userdetail.dart';
 import 'package:kitchen/singletons/shared_preferences.dart';
@@ -14,28 +13,28 @@ class UserInstance {
 
   static final _log = logging.Logger('UserInstance');
 
-
   static UserDetail? _userDetail;
 
-  static final _preferences = Preferences.getInstance(); 
-  
+  static final _preferences = Preferences.getInstance();
+
   //And check the connection status out of the gate
   void initialize({UserDetail? user}) {
     _userDetail = user;
     _getFromPref();
-    if(user != null){
+    if (user != null) {
       final _data = user.data;
-      _preferences.setStringValue(KeyPrefens.nama, _data.nama);
+      _preferences.setStringValue(KeyPrefens.nama, _data.nama ?? '');
       _preferences.setStringValue(KeyPrefens.tgl, "${_data.tglLahir}");
       _preferences.setStringValue(KeyPrefens.tlp, "${_data.telepon}");
       _preferences.setStringValue(KeyPrefens.foto, "${_data.foto}");
-      _preferences.setStringValue(KeyPrefens.email, _data.email);
-      _preferences.setStringValue(KeyPrefens.pin, _data.pin);
+      _preferences.setStringValue(KeyPrefens.email, _data.email ?? '');
+      _preferences.setStringValue(KeyPrefens.pin, _data.pin ?? '');
       _log.fine("User has initialize");
     }
   }
-  void _getFromPref()async{
-    if(_userDetail == null){
+
+  void _getFromPref() async {
+    if (_userDetail == null) {
       final id = await _preferences.getIntValue(KeyPrefens.loginID);
       final nama = await _preferences.getStringValue(KeyPrefens.nama);
       final tgl = await _preferences.getStringValue(KeyPrefens.tgl);
@@ -44,23 +43,24 @@ class UserInstance {
       final email = await _preferences.getStringValue(KeyPrefens.email);
       final pin = await _preferences.getStringValue(KeyPrefens.pin);
 
-      if(id != -1) {
+      if (id != -1) {
         final data = UserDetail.fromJson({
-        "status_code": 200,
-        "data" : {
-          "id_user": id,
-          "nama": nama,
-          "email": email,
-          "tgl_lahir": tgl,
-          "alamat": "",
-          "telepon": tlp,
-          "foto": foto,
-          "ktp": "",
-          "pin": pin,
-          "status": 0,
-          "roles_id": 0,
-          "roles": "",
-        }});
+          "status_code": 200,
+          "data": {
+            "id_user": id,
+            "nama": nama,
+            "email": email,
+            "tgl_lahir": tgl,
+            "alamat": "",
+            "telepon": tlp,
+            "foto": foto,
+            "ktp": "",
+            "pin": pin,
+            "status": 0,
+            "roles_id": 0,
+            "roles": "",
+          }
+        });
 
         _userDetail = data;
       }
@@ -68,7 +68,7 @@ class UserInstance {
   }
 
   UserDetail? get user => _userDetail;
-  void clear(){
+  void clear() {
     _userDetail = null;
   }
 }

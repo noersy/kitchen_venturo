@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kitchen/constans/tools.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/icons_cs_icons.dart';
 import 'package:kitchen/theme/spacing.dart';
@@ -115,7 +116,7 @@ class _DetailOrderState extends State<DetailOrder> {
                           ],
                         ),
                         Text(
-                          "Rp ${widget.dataOrder.totalBayar}",
+                          "Rp ${oCcy.format(widget.dataOrder.totalBayar)}",
                           style: TypoSty.subtitle.copyWith(
                             color: ColorSty.primary,
                           ),
@@ -155,7 +156,8 @@ class _DetailOrderState extends State<DetailOrder> {
                         TileListDMenu(
                           dense: true,
                           title: "Total Pembayaran",
-                          prefix: "Rp ${widget.dataOrder.totalBayar}",
+                          prefix:
+                              "Rp ${oCcy.format(widget.dataOrder.totalBayar)}",
                           textStylePrefix: TypoSty.titlePrimary,
                           onPressed: () {},
                         ),

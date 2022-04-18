@@ -39,16 +39,22 @@ class _HistoryPageState extends State<HistoryPage> {
   final List<String> _item = ["Semua Status", "Selesai", "Dibatalkan"];
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  bool _loading = false;
+  bool _loading = true;
   bool isFinisfLoadmore = false;
+  var totalHistory = 0;
+
   getListHisory() async {
     if (mounted) setState(() => _loading = true);
     Provider.of<OrderProviders>(context, listen: false).listHistorys.clear();
-    await Provider.of<OrderProviders>(context, listen: false)
-        .getListHistory()
-        .then((value) => _data =
-            Provider.of<OrderProviders>(context, listen: false).listHistorys);
-    if (mounted) setState(() => _loading = false);
+    await Provider.of<OrderProviders>(context, listen: false).getListHistory();
+    if (mounted) {
+      setState(() {
+        totalHistory = Provider.of<OrderProviders>(context, listen: false)
+            .listHistorys
+            .length;
+        _loading = false;
+      });
+    }
   }
 
   Future<void> _onRefresh() async {
@@ -66,6 +72,7 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     getListHisory();
+    _loadStart();
     super.initState();
   }
 
@@ -84,17 +91,17 @@ class _HistoryPageState extends State<HistoryPage> {
       print('_dateStart: $_dateStart | _dateEnd: $_dateEnd');
       _data = Provider.of<OrderProviders>(context, listen: false)
           .listHistorys
-          .where((element) => (element.tanggal.compareTo(_dateStart!) >= 0 &&
-              element.tanggal.compareTo(_dateEnd!) <= 0))
+          .where((element) =>
+              (element.tglDatetime.compareTo(_dateStart!) >= 0 &&
+                  element.tglDatetime.compareTo(_dateEnd!) <= 0))
           .toList();
       for (var item in _data) {
-        print(' tgl: ${item.tanggal}');
+        print(' tgl: ${item.tglDatetime}');
       }
       setState(() {});
     }
   }
 
-  var totalHistory = 0;
   Future<bool> _loadMore() async {
     print('_loadMore _data.length ${_data.length}');
     if (_data.length < totalHistory) {
@@ -106,7 +113,6 @@ class _HistoryPageState extends State<HistoryPage> {
         setState(() {
           _data.addAll(_orders);
         });
-        isFinisfLoadmore = true;
       }
       return true;
     } else {
@@ -114,6 +120,30 @@ class _HistoryPageState extends State<HistoryPage> {
       isFinisfLoadmore = true;
       return true;
     }
+  }
+
+  Future<void> _loadStart() async {
+    _orders.clear();
+    _data.clear();
+    var _duration = const Duration(seconds: 1);
+    if (mounted) {
+      setState(() => _loading = true);
+
+      _orders = (await Provider.of<OrderProviders>(context, listen: false)
+              .getHistoryLimit(10, 0)) ??
+          [];
+      _data = _orders;
+
+      Timer(_duration, () {
+        if (mounted) {
+          setState(() {
+            _loading = false;
+          });
+        }
+      });
+    }
+    print('load start: ${_data.length}');
+    // return true;
   }
 
   @override
@@ -124,15 +154,16 @@ class _HistoryPageState extends State<HistoryPage> {
         profileTitle: "Riwayat",
         dense: true,
       ),
-      body: SmartRefresher(
-        onRefresh: _onRefresh,
-        controller: _refreshController,
-        child: LoadMore(
-          textBuilder: DefaultLoadMoreTextBuilder.english,
-          isFinish: isFinisfLoadmore,
-          onLoadMore: _loadMore,
-          child: SingleChildScrollView(
-            child: Padding(
+      body: LoadMore(
+        textBuilder: DefaultLoadMoreTextBuilder.english,
+        isFinish: isFinisfLoadmore,
+        onLoadMore: _loadMore,
+        child: SmartRefresher(
+          onRefresh: _onRefresh,
+          controller: _refreshController,
+          child: ListView(
+            children: [
+              Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: SpaceDims.sp18,
                   vertical: SpaceDims.sp14,
@@ -152,7 +183,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           width: 160.0,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              color: ColorSty.grey60,
+                              color: ColorSty.white80,
                               border: Border.all(color: ColorSty.primary),
                               borderRadius: BorderRadius.circular(30.0)),
                           child: DropdownButton<String>(
@@ -188,7 +219,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         ),
                         TextButton(
                           style: TextButton.styleFrom(
-                            backgroundColor: ColorSty.grey60,
+                            backgroundColor: ColorSty.white80,
                             shape: RoundedRectangleBorder(
                               side: const BorderSide(
                                 color: ColorSty.primary,
@@ -218,34 +249,50 @@ class _HistoryPageState extends State<HistoryPage> {
                         ),
                       ],
                     ),
-                    // for (var item
-                    //     in Provider.of<OrderProviders>(context, listen: false)
-                    //         .listHistorys)
-                    for (var item in _data)
-                      if (item.status == statusCode)
-                        // OrderHistoryCard(onPressed: () {}),
-                        _loading
-                            ? const SkeletonOrderCad()
-                            : OrderHistoryCard(
-                                onPressed: () {},
-                                data: item,
-                              ),
-                    // for (var item
-                    //     in Provider.of<OrderProviders>(context, listen: false)
-                    //         .listHistorys)
-                    for (var item in _data)
-                      if (5 == statusCode &&
-                          (item.status == 3 || item.status == 4))
-                        // OrderHistoryCard(onPressed: () {}),
-                        _loading
-                            ? const SkeletonOrderCad()
-                            : OrderHistoryCard(
-                                onPressed: () {},
-                                data: item,
-                              ),
+
+                    _loading
+                        ? const SkeletonOrderCad()
+                        : Column(
+                            children: [
+                              //  tampil order history card
+                              for (final item in _data)
+                                OrderHistoryCard(
+                                  onPressed: () {},
+                                  data: item,
+                                ),
+                              const SizedBox(height: 10.0)
+                            ],
+                          ),
+                    // // for (var item
+                    // //     in Provider.of<OrderProviders>(context, listen: false)
+                    // //         .listHistorys)
+                    // for (var item in _data)
+                    //   if (item.status == statusCode)
+                    //     // OrderHistoryCard(onPressed: () {}),
+                    //     _loading
+                    //         ? const SkeletonOrderCad()
+                    //         : OrderHistoryCard(
+                    //             onPressed: () {},
+                    //             data: item,
+                    //           ),
+                    // // for (var item
+                    // //     in Provider.of<OrderProviders>(context, listen: false)
+                    // //         .listHistorys)
+                    // for (var item in _data)
+                    //   if (5 == statusCode &&
+                    //       (item.status == 3 || item.status == 4))
+                    //     // OrderHistoryCard(onPressed: () {}),
+                    //     _loading
+                    //         ? const SkeletonOrderCad()
+                    //         : OrderHistoryCard(
+                    //             onPressed: () {},
+                    //             data: item,
+                    //           ),
                     const SizedBox(height: 100),
                   ],
-                )),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -256,9 +303,11 @@ class _HistoryPageState extends State<HistoryPage> {
 class OrderHistoryCard extends StatelessWidget {
   final VoidCallback onPressed;
   final Order data;
-  const OrderHistoryCard(
-      {Key? key, required this.onPressed, required this.data})
-      : super(key: key);
+  const OrderHistoryCard({
+    Key? key,
+    required this.onPressed,
+    required this.data,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -289,7 +338,9 @@ class OrderHistoryCard extends StatelessWidget {
                   color: ColorSty.grey60,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Image.asset("assert/image/menu/1637916792.png"),
+                // child: data.menu[0].foto != null
+                //     ? Image.network(data.menu[0].foto ?? '')
+                //     : Image.asset("assert/image/menu/1637916792.png"),
               ),
               Expanded(
                 child: Padding(
@@ -303,7 +354,7 @@ class OrderHistoryCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${data.tanggal.toString().substring(0, 10)}",
+                              data.tgl,
                               style: TypoSty.mini
                                   .copyWith(color: Colors.grey, fontSize: 14.0),
                             ),
@@ -313,7 +364,8 @@ class OrderHistoryCard extends StatelessWidget {
                                   Text(
                                     "Dibatalkan",
                                     style: TypoSty.mini.copyWith(
-                                        color: Color.fromARGB(255, 212, 40, 40),
+                                        color: const Color.fromARGB(
+                                            255, 212, 40, 40),
                                         fontSize: 14.0),
                                   ),
                                 if (data.status == 3)
@@ -339,13 +391,13 @@ class OrderHistoryCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Rp 20.000",
+                            "Rp ${oCcy.format(data.totalBayar)}",
                             style: TypoSty.mini.copyWith(
                                 fontSize: 14.0, color: ColorSty.primary),
                           ),
                           const SizedBox(width: SpaceDims.sp8),
                           Text(
-                            "(3 Menu)",
+                            "(${data.menu.length} Menu)",
                             style: TypoSty.mini.copyWith(
                               fontSize: 14.0,
                               color: ColorSty.grey,

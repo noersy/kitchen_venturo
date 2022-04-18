@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kitchen/singletons/google_tools.dart';
+import 'package:kitchen/widget/custom_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:kitchen/constans/key_prefens.dart';
@@ -36,14 +37,14 @@ class _LoginPageState extends State<LoginPage> {
 
   _login() async {
     setState(() => _loading = true);
-    bool isLogin =
+    Map loginResponse =
         await Provider.of<AuthProviders>(context, listen: false).login(
       _controllerEmail.text,
       _controllerPassword.text,
       isGoogle: false,
     );
 
-    if (isLogin) {
+    if (loginResponse['status']) {
       await _preferences.setBoolValue(KeyPrefens.login, true);
 
       Timer(_duration, () {
@@ -51,23 +52,24 @@ class _LoginPageState extends State<LoginPage> {
         setState(() => _loading = false);
       });
       return;
-    } else if (isLogin == false) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text(
-                  'Email/password anda salah!\nAnda belum mendaftar?'),
-              // content: Text('email '),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Close')),
-              ],
-            );
-          });
+    } else {
+      showSimpleDialog(context, loginResponse['message']);
+      // showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return AlertDialog(
+      //         title: const Text(
+      //             'Email/password anda salah!\nAnda belum mendaftar?'),
+      //         // content: Text('email '),
+      //         actions: <Widget>[
+      //           TextButton(
+      //               onPressed: () {
+      //                 Navigator.pop(context);
+      //               },
+      //               child: const Text('Close')),
+      //         ],
+      //       );
+      //     });
     }
 
     setState(() => _loading = false);
@@ -79,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
       final user = await GoogleLogin.getInstance().login();
 
       if (user != null) {
-        bool isLogin =
+        Map loginResponse =
             await Provider.of<AuthProviders>(context, listen: false).login(
           user.email,
           _controllerPassword.text,
@@ -87,15 +89,17 @@ class _LoginPageState extends State<LoginPage> {
           nama: user.displayName,
         );
 
-        if (!isLogin) throw Exception("Error : ");
+        if (loginResponse['status']) {
+          await _preferences.setBoolValue(KeyPrefens.login, true);
 
-        await _preferences.setBoolValue(KeyPrefens.login, true);
-
-        Timer(_duration, () {
-          Navigate.toFindLocation(context);
-          setState(() => _loading = false);
-        });
-        return;
+          Timer(_duration, () {
+            Navigate.toFindLocation(context);
+            setState(() => _loading = false);
+          });
+          return;
+        } else {
+          showSimpleDialog(context, loginResponse['message']);
+        }
       }
     } catch (e, r) {
       _log.warning(e);
@@ -156,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 26.0.w),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(height: 70.0.h),
                         Image.asset("assert/image/javacode_logo.png"),
@@ -171,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(height: 25.0.h),
                         FormLogin(
                           title: 'Alamat Email',
-                          hint: 'Lorem.ipsum@gmail.com',
+                          hint: 'example.email@gmail.com',
                           type: TextInputType.emailAddress,
                           editingController: _controllerEmail,
                         ),
@@ -189,45 +193,45 @@ class _LoginPageState extends State<LoginPage> {
                           bgColors: ColorSty.primary,
                         ),
                         SizedBox(height: 40.0.h),
-                        Row(
-                          children: [
-                            const Expanded(
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(color: ColorSty.grey),
-                                child: SizedBox(height: 1),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: SpaceDims.sp8,
-                              ),
-                              child: Text("atau", style: TypoSty.caption2),
-                            ),
-                            const Expanded(
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(color: ColorSty.grey),
-                                child: SizedBox(height: 1),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: SpaceDims.sp16.h),
-                        ButtonLogin(
-                          title: 'Masuk menggunakan',
-                          boldTitle: "Google",
-                          bgColors: ColorSty.white,
-                          icon: "assert/image/icon_google.png",
-                          onPressed: _loginWithGoogle,
-                        ),
-                        SizedBox(height: SpaceDims.sp8.h),
-                        ButtonLogin(
-                          title: 'Masuk menggunakan',
-                          boldTitle: "Apple",
-                          icon: "assert/image/icon_apple.png",
-                          bgColors: ColorSty.black,
-                          onPressed: () {},
-                        ),
-                        SizedBox(height: SpaceDims.sp22.h)
+                        // Row(
+                        //   children: [
+                        //     const Expanded(
+                        //       child: DecoratedBox(
+                        //         decoration: BoxDecoration(color: ColorSty.grey),
+                        //         child: SizedBox(height: 1),
+                        //       ),
+                        //     ),
+                        //     Padding(
+                        //       padding: const EdgeInsets.symmetric(
+                        //         horizontal: SpaceDims.sp8,
+                        //       ),
+                        //       child: Text("atau", style: TypoSty.caption2),
+                        //     ),
+                        //     const Expanded(
+                        //       child: DecoratedBox(
+                        //         decoration: BoxDecoration(color: ColorSty.grey),
+                        //         child: SizedBox(height: 1),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // SizedBox(height: SpaceDims.sp16.h),
+                        // ButtonLogin(
+                        //   title: 'Masuk menggunakan',
+                        //   boldTitle: "Google",
+                        //   bgColors: ColorSty.white,
+                        //   icon: "assert/image/icon_google.png",
+                        //   onPressed: _loginWithGoogle,
+                        // ),
+                        // SizedBox(height: SpaceDims.sp8.h),
+                        // ButtonLogin(
+                        //   title: 'Masuk menggunakan',
+                        //   boldTitle: "Apple",
+                        //   icon: "assert/image/icon_apple.png",
+                        //   bgColors: ColorSty.black,
+                        //   onPressed: () {},
+                        // ),
+                        // SizedBox(height: SpaceDims.sp22.h)
                       ],
                     ),
                   ),

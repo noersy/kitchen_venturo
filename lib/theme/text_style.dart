@@ -66,6 +66,12 @@ class TypoSty {
     fontSize: ScreenUtil().setSp(16.0),
   );
 
+  static TextStyle caption3 = TextStyle(
+    fontFamily: "Montserrat",
+    color: Colors.grey,
+    fontSize: ScreenUtil().setSp(16.0),
+  );
+
   static TextStyle button = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.w600,

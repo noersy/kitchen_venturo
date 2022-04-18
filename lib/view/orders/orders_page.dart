@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:kitchen/constans/tools.dart';
 import 'package:kitchen/providers/order_providers.dart';
 import 'package:kitchen/route/route.dart';
 import 'package:kitchen/theme/colors.dart';
@@ -87,29 +88,30 @@ class _OrdersPageState extends State<OrdersPage> {
                   return _loading
                       ? const SkeletonOrderMenuCard()
                       : Column(
-                          children: [
-                            for (final item in _orderOngoing)
-                              if (item.status == 0 ||
-                                  item.status == 1 ||
-                                  item.status == 2)
-                                OrderMenuCard(
-                                  onPressed: () => Navigate.toDetailOrder(
+                          children: _orderOngoing.map((item) {
+                            return item.status == 0 ||
+                                    item.status == 1 ||
+                                    item.status == 2
+                                ? OrderMenuCard(
+                                    onPressed: () => Navigate.toDetailOrder(
                                       context,
                                       dataOrders: item,
-                                      onGoBack: onGoBack),
-                                  date:
-                                      item.tanggal.toString().substring(0, 10),
-                                  // harga: item["orders"][0]["harga"],
-                                  // title: item["orders"][0]["name"],
-                                  // urlImage: item["orders"][0]["image"],
+                                      onGoBack: onGoBack,
+                                    ),
+                                    date: item.tgl,
+                                    // harga: item["orders"][0]["harga"],
+                                    // title: item["orders"][0]["name"],
+                                    // urlImage: item["orders"][0]["image"],
 
-                                  harga: '${item.totalBayar}',
-                                  kodeStatus: item.status,
-                                  title: '${item.nama}',
-                                  jumlahMenu: item.menu.length,
-                                  urlImage: "assert/image/menu/1637916792.png",
-                                ),
-                          ],
+                                    harga: '${item.totalBayar}',
+                                    kodeStatus: item.status,
+                                    title: item.nama,
+                                    jumlahMenu: item.menu.length,
+                                    urlImage:
+                                        "assert/image/menu/1637916792.png",
+                                  )
+                                : const SizedBox();
+                          }).toList(),
                         );
                 } else {
                   return SizedBox(
@@ -150,18 +152,18 @@ class _OrdersPageState extends State<OrdersPage> {
 class OrderMenuCard extends StatelessWidget {
   final String urlImage, title, date, harga;
   final VoidCallback onPressed;
-  final jumlahMenu;
-  final kodeStatus;
-  const OrderMenuCard(
-      {Key? key,
-      required this.urlImage,
-      required this.title,
-      required this.date,
-      required this.harga,
-      required this.onPressed,
-      required this.jumlahMenu,
-      this.kodeStatus})
-      : super(key: key);
+  final int jumlahMenu;
+  final int kodeStatus;
+  const OrderMenuCard({
+    Key? key,
+    required this.urlImage,
+    required this.title,
+    required this.date,
+    required this.harga,
+    required this.onPressed,
+    required this.jumlahMenu,
+    required this.kodeStatus,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -233,10 +235,6 @@ class OrderMenuCard extends StatelessWidget {
                                   ),
                               ],
                             ),
-                            Text(
-                              "20 Menit",
-                              style: TypoSty.mini.copyWith(color: Colors.grey),
-                            ),
                           ],
                         ),
                       ),
@@ -250,9 +248,11 @@ class OrderMenuCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Rp $harga",
+                            "Rp ${oCcy.format(int.parse(harga))}",
                             style: TypoSty.mini.copyWith(
-                                fontSize: 14.0, color: ColorSty.primary),
+                              fontSize: 14.0,
+                              color: ColorSty.primary,
+                            ),
                           ),
                           const SizedBox(width: SpaceDims.sp24),
                           Text(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:kitchen/constans/get_header.dart';
 import 'package:kitchen/tools/random_string.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart' as logging;
@@ -10,7 +11,6 @@ import '../models/listorder.dart';
 
 class OrderProviders extends ChangeNotifier {
   static final _log = logging.Logger('OrderProvider');
-  static const headers = {"Content-Type": "application/json", "token": "m_app"};
   // static int _orderInProgress = 0;
   // static int _checkOrder = 0;
   static Map<String, dynamic> _checkOrder = {};
@@ -97,7 +97,10 @@ class OrderProviders extends ChangeNotifier {
     try {
       final _api = Uri.http(host, "$sub/api/order/all");
       _log.fine("Try to get order in progress");
-      final response = await http.get(_api, headers: headers);
+      final response = await http.get(
+        _api,
+        headers: await getHeader(),
+      );
       // print('response: ${response.body}');
       if (response.statusCode == 204 ||
           json.decode(response.body)["status_code"] == 204) {
@@ -126,7 +129,10 @@ class OrderProviders extends ChangeNotifier {
     try {
       final _api = Uri.http(host, "$sub/api/order/all");
       _log.fine("Try to get order in progress");
-      final response = await http.get(_api, headers: headers);
+      final response = await http.get(
+        _api,
+        headers: await getHeader(),
+      );
       // print('response: ${response.body}');
       if (response.statusCode == 204 ||
           json.decode(response.body)["status_code"] == 204) {
@@ -161,7 +167,10 @@ class OrderProviders extends ChangeNotifier {
 
       // print('api: $_api');
       _log.fine("Try to get order in progress");
-      final response = await http.post(_api, headers: headers);
+      final response = await http.post(
+        _api,
+        headers: await getHeader(),
+      );
       // print('response: ${response.body}');
       if (response.statusCode == 204 ||
           json.decode(response.body)["status_code"] == 204) {
@@ -195,11 +204,11 @@ class OrderProviders extends ChangeNotifier {
     try {
       _log.fine("Try to get list history of order");
       final response = await http.get(
-          // Uri.parse(
-          //     "https://$host/api/order/history/${user.data.idUser}?limit=$limit&start=$start"),
-          Uri.parse(
-              "https://$host/api/order/history/${user}?limit=$limit&start=$start"),
-          headers: headers);
+        // Uri.parse(
+        //     "https://$host/api/order/history/${user.data.idUser}?limit=$limit&start=$start"),
+        Uri.parse("https://$host/api/order/all?limit=$limit&offset=$start"),
+        headers: await getHeader(),
+      );
       // final response = await http.get(
       //   _api,
       //   headers: headers,

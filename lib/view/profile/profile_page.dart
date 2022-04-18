@@ -198,68 +198,68 @@ class _ProfilePageState extends State<ProfilePage> {
                         const SizedBox(height: SpaceDims.sp22),
                       ],
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: SpaceDims.sp24,
-                        vertical: SpaceDims.sp12,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: SpaceDims.sp22,
-                      ),
-                      decoration: BoxDecoration(
-                        color: ColorSty.grey60,
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Column(
-                        children: const [
-                          TileListProfile(
-                            top: false,
-                            title: 'Penilaian',
-                            button: true,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: SpaceDims.sp22),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: SpaceDims.sp32),
-                          child: Text(lang.profile.subtitle2,
-                              style: TypoSty.titlePrimary),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: SpaceDims.sp24,
-                            vertical: SpaceDims.sp12,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: SpaceDims.sp22,
-                          ),
-                          decoration: BoxDecoration(
-                            color: ColorSty.grey60,
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Column(
-                            children: const [
-                              TileListProfile(
-                                top: false,
-                                title: 'Device Info',
-                                suffix: 'Iphone 13',
-                              ),
-                              TileListProfile(
-                                title: 'Version',
-                                suffix: '1.3',
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: SpaceDims.sp22),
-                      ],
-                    ),
+                    // Container(
+                    //   alignment: Alignment.center,
+                    //   margin: const EdgeInsets.symmetric(
+                    //     horizontal: SpaceDims.sp24,
+                    //     vertical: SpaceDims.sp12,
+                    //   ),
+                    //   padding: const EdgeInsets.symmetric(
+                    //     vertical: SpaceDims.sp22,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     color: ColorSty.grey60,
+                    //     borderRadius: BorderRadius.circular(30.0),
+                    //   ),
+                    //   child: Column(
+                    //     children: const [
+                    //       TileListProfile(
+                    //         top: false,
+                    //         title: 'Penilaian',
+                    //         button: true,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // const SizedBox(height: SpaceDims.sp22),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsets.only(left: SpaceDims.sp32),
+                    //       child: Text(lang.profile.subtitle2,
+                    //           style: TypoSty.titlePrimary),
+                    //     ),
+                    //     Container(
+                    //       alignment: Alignment.center,
+                    //       margin: const EdgeInsets.symmetric(
+                    //         horizontal: SpaceDims.sp24,
+                    //         vertical: SpaceDims.sp12,
+                    //       ),
+                    //       padding: const EdgeInsets.symmetric(
+                    //         vertical: SpaceDims.sp22,
+                    //       ),
+                    //       decoration: BoxDecoration(
+                    //         color: ColorSty.grey60,
+                    //         borderRadius: BorderRadius.circular(30.0),
+                    //       ),
+                    //       child: Column(
+                    //         children: const [
+                    //           TileListProfile(
+                    //             top: false,
+                    //             title: 'Device Info',
+                    //             suffix: 'Iphone 13',
+                    //           ),
+                    //           TileListProfile(
+                    //             title: 'Version',
+                    //             suffix: '1.3',
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     const SizedBox(height: SpaceDims.sp22),
+                    //   ],
+                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
