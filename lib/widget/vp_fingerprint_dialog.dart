@@ -25,14 +25,14 @@ class VFingerPrintDialog extends StatelessWidget {
                   Text(
                     "Verifikasi Pesanan",
                     style: TypoSty.title.copyWith(
-                      fontSize: 18.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     "Finger Print",
                     style: TypoSty.caption2.copyWith(
-                      fontSize: 14.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.normal,
                     ),
                   ),

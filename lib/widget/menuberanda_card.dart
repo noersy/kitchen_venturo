@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kitchen/providers/order_providers.dart';
-import 'package:kitchen/route/route.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
@@ -78,7 +77,7 @@ class _CardMenuState extends State<CardMenu> {
                   Text(
                     nama,
                     style: TypoSty.title.copyWith(
-                      fontSize: 20.0,
+                      fontSize: 18.0,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -97,7 +96,7 @@ class _CardMenuState extends State<CardMenu> {
                         "Tambahkan Catatan",
                         style: TypoSty.caption2.copyWith(
                           fontWeight: FontWeight.w500,
-                          fontSize: 12.0,
+                          fontSize: 10.0,
                           color: ColorSty.grey,
                         ),
                       ),

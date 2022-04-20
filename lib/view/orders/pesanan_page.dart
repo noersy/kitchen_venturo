@@ -38,7 +38,7 @@ class _PesananPageState extends State<PesananPage>
             vertical: 8.0,
           ),
           labelPadding: const EdgeInsets.all(0),
-          labelStyle: TypoSty.title.copyWith(fontSize: 18),
+          labelStyle: TypoSty.title.copyWith(fontSize: 16),
           indicatorColor: ColorSty.primary,
           unselectedLabelColor: ColorSty.black,
           labelColor: ColorSty.primary,

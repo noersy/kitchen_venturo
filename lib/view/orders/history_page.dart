@@ -8,7 +8,6 @@ import 'package:kitchen/theme/text_style.dart';
 import 'package:kitchen/widget/appbar.dart';
 import 'package:loadmore/loadmore.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skeleton_animation/skeleton_animation.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../constans/tools.dart';
@@ -25,7 +24,6 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   static DateTime? _dateStart;
   static DateTime? _dateEnd;
-  static int _status = 0;
   static List<Order> _data = [];
   static List<Order> _orders = [];
   static final DateTime _dateNow = DateTime.now();
@@ -37,10 +35,9 @@ class _HistoryPageState extends State<HistoryPage> {
   int statusCode = 3;
   String _dropdownValue = 'Semua Status';
   final List<String> _item = ["Semua Status", "Selesai", "Dibatalkan"];
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
   bool _loading = true;
   bool isFinisfLoadmore = false;
+  bool _loadingLoadMore = false;
   var totalHistory = 0;
 
   getListHisory() async {
@@ -58,14 +55,9 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Future<void> _onRefresh() async {
-    var _duration = const Duration(seconds: 2);
-
     if (mounted) {
-      setState(() => _loading = true);
-      Timer(_duration, () {
-        setState(() => _loading = false);
-        _refreshController.refreshCompleted();
-      });
+      getListHisory();
+      _loadStart();
     }
   }
 
@@ -88,37 +80,44 @@ class _HistoryPageState extends State<HistoryPage> {
 
       _dateStart = val.startDate;
       _dateEnd = val.endDate;
-      print('_dateStart: $_dateStart | _dateEnd: $_dateEnd');
       _data = Provider.of<OrderProviders>(context, listen: false)
           .listHistorys
           .where((element) =>
               (element.tglDatetime.compareTo(_dateStart!) >= 0 &&
                   element.tglDatetime.compareTo(_dateEnd!) <= 0))
           .toList();
-      for (var item in _data) {
-        print(' tgl: ${item.tglDatetime}');
-      }
       setState(() {});
     }
   }
 
   Future<bool> _loadMore() async {
-    print('_loadMore _data.length ${_data.length}');
-    if (_data.length < totalHistory) {
+    if (!_loadingLoadMore) {
+      if (_data.length < totalHistory) {
+        await getMoredata();
+      } else {
+        LoadMoreStatus.nomore;
+        if (mounted) {
+          setState(() {
+            isFinisfLoadmore = true;
+          });
+        }
+      }
+    }
+    return true;
+  }
+
+  getMoredata() async {
+    if (mounted) {
+      setState(() => _loadingLoadMore = true);
+      _orders = (await Provider.of<OrderProviders>(context, listen: false)
+              .getOrderLimit(5, _data.length)) ??
+          [];
       if (mounted) {
-        // setState(() => _loading = true);
-        _orders = (await Provider.of<OrderProviders>(context, listen: false)
-                .getHistoryLimit(5, _data.length)) ??
-            [];
         setState(() {
           _data.addAll(_orders);
+          _loadingLoadMore = false;
         });
       }
-      return true;
-    } else {
-      LoadMoreStatus.nomore;
-      isFinisfLoadmore = true;
-      return true;
     }
   }
 
@@ -130,7 +129,7 @@ class _HistoryPageState extends State<HistoryPage> {
       setState(() => _loading = true);
 
       _orders = (await Provider.of<OrderProviders>(context, listen: false)
-              .getHistoryLimit(10, 0)) ??
+              .getOrderLimit(10, 0)) ??
           [];
       _data = _orders;
 
@@ -142,8 +141,6 @@ class _HistoryPageState extends State<HistoryPage> {
         }
       });
     }
-    print('load start: ${_data.length}');
-    // return true;
   }
 
   @override
@@ -154,105 +151,109 @@ class _HistoryPageState extends State<HistoryPage> {
         profileTitle: "Riwayat",
         dense: true,
       ),
-      body: LoadMore(
-        textBuilder: DefaultLoadMoreTextBuilder.english,
-        isFinish: isFinisfLoadmore,
-        onLoadMore: _loadMore,
-        child: SmartRefresher(
-          onRefresh: _onRefresh,
-          controller: _refreshController,
-          child: ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: SpaceDims.sp18,
-                  vertical: SpaceDims.sp14,
-                ),
-                child: Column(
+      body: _loading
+          ? const Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SpaceDims.sp18,
+                vertical: SpaceDims.sp14,
+              ),
+              child: SkeletonOrderCad(),
+            )
+          : RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: LoadMore(
+                textBuilder: DefaultLoadMoreTextBuilder.english,
+                isFinish: isFinisfLoadmore,
+                onLoadMore: _loadMore,
+                child: ListView(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(
-                            right: SpaceDims.sp8,
-                            left: SpaceDims.sp12,
-                            bottom: SpaceDims.sp4,
-                            top: SpaceDims.sp4,
-                          ),
-                          width: 160.0,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: ColorSty.white80,
-                              border: Border.all(color: ColorSty.primary),
-                              borderRadius: BorderRadius.circular(30.0)),
-                          child: DropdownButton<String>(
-                            isDense: true,
-                            value: _dropdownValue,
-                            alignment: Alignment.topCenter,
-                            borderRadius: BorderRadius.circular(30.0),
-                            icon: const Icon(Icons.arrow_drop_down),
-                            style: TypoSty.caption2.copyWith(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600,
-                                color: ColorSty.black),
-                            onChanged: (String? newValue) {
-                              setState(() => {
-                                    _dropdownValue = newValue!,
-                                    // "Semua Status", "Selesai", "Dibatalkan
-                                    if (_dropdownValue == 'Selesai')
-                                      statusCode = 3,
-                                    if (_dropdownValue == 'Dibatalkan')
-                                      statusCode = 4,
-                                    if (_dropdownValue == 'Semua Status')
-                                      statusCode = 5,
-                                  });
-                            },
-                            items: [
-                              for (String item in _item)
-                                DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(item),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: SpaceDims.sp18,
+                        vertical: SpaceDims.sp14,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(
+                                  right: SpaceDims.sp8,
+                                  left: SpaceDims.sp12,
+                                  bottom: SpaceDims.sp4,
+                                  top: SpaceDims.sp4,
                                 ),
+                                width: 160.0,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color: ColorSty.white80,
+                                    border: Border.all(color: ColorSty.primary),
+                                    borderRadius: BorderRadius.circular(30.0)),
+                                child: DropdownButton<String>(
+                                  isDense: true,
+                                  value: _dropdownValue,
+                                  alignment: Alignment.topCenter,
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  style: TypoSty.caption2.copyWith(
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w600,
+                                      color: ColorSty.black),
+                                  onChanged: (String? newValue) {
+                                    setState(() => {
+                                          _dropdownValue = newValue!,
+                                          // "Semua Status", "Selesai", "Dibatalkan
+                                          if (_dropdownValue == 'Selesai')
+                                            statusCode = 3,
+                                          if (_dropdownValue == 'Dibatalkan')
+                                            statusCode = 4,
+                                          if (_dropdownValue == 'Semua Status')
+                                            statusCode = 5,
+                                        });
+                                  },
+                                  items: [
+                                    for (String item in _item)
+                                      DropdownMenuItem<String>(
+                                        value: item,
+                                        child: Text(item),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  backgroundColor: ColorSty.white80,
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                      color: ColorSty.primary,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                                onPressed: _pickDateRange,
+                                child: SizedBox(
+                                  width: 160.0,
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: SpaceDims.sp12),
+                                      Text(
+                                        "25/12/21 - 30/12/21",
+                                        style: TypoSty.caption2.copyWith(
+                                            fontSize: 10.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      const SizedBox(width: SpaceDims.sp8),
+                                      const Icon(IconsCs.date,
+                                          size: 18.0, color: ColorSty.primary),
+                                      const SizedBox(width: SpaceDims.sp8),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            backgroundColor: ColorSty.white80,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                color: ColorSty.primary,
-                              ),
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                          ),
-                          onPressed: _pickDateRange,
-                          child: SizedBox(
-                            width: 160.0,
-                            child: Row(
-                              children: [
-                                const SizedBox(width: SpaceDims.sp12),
-                                Text(
-                                  "25/12/21 - 30/12/21",
-                                  style: TypoSty.caption2.copyWith(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                const SizedBox(width: SpaceDims.sp8),
-                                const Icon(IconsCs.date,
-                                    size: 18.0, color: ColorSty.primary),
-                                const SizedBox(width: SpaceDims.sp8),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    _loading
-                        ? const SkeletonOrderCad()
-                        : Column(
+                          Column(
                             children: [
                               //  tampil order history card
                               for (final item in _data)
@@ -263,39 +264,39 @@ class _HistoryPageState extends State<HistoryPage> {
                               const SizedBox(height: 10.0)
                             ],
                           ),
-                    // // for (var item
-                    // //     in Provider.of<OrderProviders>(context, listen: false)
-                    // //         .listHistorys)
-                    // for (var item in _data)
-                    //   if (item.status == statusCode)
-                    //     // OrderHistoryCard(onPressed: () {}),
-                    //     _loading
-                    //         ? const SkeletonOrderCad()
-                    //         : OrderHistoryCard(
-                    //             onPressed: () {},
-                    //             data: item,
-                    //           ),
-                    // // for (var item
-                    // //     in Provider.of<OrderProviders>(context, listen: false)
-                    // //         .listHistorys)
-                    // for (var item in _data)
-                    //   if (5 == statusCode &&
-                    //       (item.status == 3 || item.status == 4))
-                    //     // OrderHistoryCard(onPressed: () {}),
-                    //     _loading
-                    //         ? const SkeletonOrderCad()
-                    //         : OrderHistoryCard(
-                    //             onPressed: () {},
-                    //             data: item,
-                    //           ),
-                    const SizedBox(height: 100),
+                          // // for (var item
+                          // //     in Provider.of<OrderProviders>(context, listen: false)
+                          // //         .listHistorys)
+                          // for (var item in _data)
+                          //   if (item.status == statusCode)
+                          //     // OrderHistoryCard(onPressed: () {}),
+                          //     _loading
+                          //         ? const SkeletonOrderCad()
+                          //         : OrderHistoryCard(
+                          //             onPressed: () {},
+                          //             data: item,
+                          //           ),
+                          // // for (var item
+                          // //     in Provider.of<OrderProviders>(context, listen: false)
+                          // //         .listHistorys)
+                          // for (var item in _data)
+                          //   if (5 == statusCode &&
+                          //       (item.status == 3 || item.status == 4))
+                          //     // OrderHistoryCard(onPressed: () {}),
+                          //     _loading
+                          //         ? const SkeletonOrderCad()
+                          //         : OrderHistoryCard(
+                          //             onPressed: () {},
+                          //             data: item,
+                          //           ),
+                          const SizedBox(height: 100),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
@@ -356,7 +357,7 @@ class OrderHistoryCard extends StatelessWidget {
                             Text(
                               data.tgl,
                               style: TypoSty.mini
-                                  .copyWith(color: Colors.grey, fontSize: 14.0),
+                                  .copyWith(color: Colors.grey, fontSize: 12.0),
                             ),
                             Row(
                               children: [
@@ -366,14 +367,14 @@ class OrderHistoryCard extends StatelessWidget {
                                     style: TypoSty.mini.copyWith(
                                         color: const Color.fromARGB(
                                             255, 212, 40, 40),
-                                        fontSize: 14.0),
+                                        fontSize: 12.0),
                                   ),
                                 if (data.status == 3)
                                   Text(
                                     "Selesai",
                                     style: TypoSty.mini.copyWith(
                                         color: ColorSty.primary,
-                                        fontSize: 14.0),
+                                        fontSize: 12.0),
                                   ),
                               ],
                             ),
@@ -383,7 +384,7 @@ class OrderHistoryCard extends StatelessWidget {
                       const SizedBox(height: SpaceDims.sp4),
                       Text(
                         data.nama,
-                        style: TypoSty.title.copyWith(fontSize: 20.0),
+                        style: TypoSty.title.copyWith(fontSize: 18.0),
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: SpaceDims.sp4),
@@ -393,13 +394,13 @@ class OrderHistoryCard extends StatelessWidget {
                           Text(
                             "Rp ${oCcy.format(data.totalBayar)}",
                             style: TypoSty.mini.copyWith(
-                                fontSize: 14.0, color: ColorSty.primary),
+                                fontSize: 12.0, color: ColorSty.primary),
                           ),
                           const SizedBox(width: SpaceDims.sp8),
                           Text(
                             "(${data.menu.length} Menu)",
                             style: TypoSty.mini.copyWith(
-                              fontSize: 14.0,
+                              fontSize: 12.0,
                               color: ColorSty.grey,
                             ),
                           ),

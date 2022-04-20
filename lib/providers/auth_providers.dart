@@ -29,7 +29,6 @@ class AuthProviders extends ChangeNotifier {
     bool? isGoogle = false,
     String? nama = "",
   }) async {
-    Map response;
     final Uri _api = Uri.http(host, "$sub/api/auth/login");
     try {
       final body = <String, dynamic>{
@@ -45,17 +44,18 @@ class AuthProviders extends ChangeNotifier {
         headers: await getHeader(),
         body: json.encode(body),
       );
-      if (response.statusCode == 200 &&
-          json.decode(response.body)["status_code"] == 200) {
+      var responseBody = jsonDecode(response.body);
+      if (response.statusCode == 200 && responseBody["status_code"] == 200) {
         _loginUser = loginUserFromJson(response.body);
-        if (_loginUser == null) _log.info("Login failed");
-        if (_loginUser != null) _log.fine("Login successes");
-        Map responseBody = json.decode(response.body);
-        Preferences.getInstance()
-            .setIntValue(KeyPrefens.loginID, _loginUser!.data.user.idUser);
-        Preferences.getInstance()
-            .setStringValue('token', responseBody['data']['token']);
-        _user = userDetailFromJson(json.encode(responseBody['data']['user']));
+        Preferences.getInstance().setIntValue(
+          KeyPrefens.loginID,
+          _loginUser!.data.user.idUser,
+        );
+        Preferences.getInstance().setStringValue(
+          'token',
+          responseBody['data']['token'],
+        );
+        _user = userDetailFromJson(response.body);
         UserInstance.getInstance().initialize(user: _user);
         // getUser(id: _loginUser!.data.user.idUser);
         notifyListeners();

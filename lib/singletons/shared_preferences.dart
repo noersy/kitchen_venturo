@@ -15,7 +15,6 @@ class Preferences {
 
   initialize() async {
     _prefs = await SharedPreferences.getInstance();
-    print('_prefs: ${_prefs}');
   }
 
   Future<bool> setBoolValue(String key, bool value) async {

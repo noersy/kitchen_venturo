@@ -175,21 +175,24 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Provider.of<LangProviders>(context)
                                           .isIndo;
                                   return TileListProfile(
-                                    title: lang.profile.bhs,
-                                    suffix: _isIndo ? 'Indonesia' : 'English',
-                                    onPreseed: () => showModalBottomSheet(
-                                      barrierColor:
-                                          ColorSty.grey.withOpacity(0.2),
-                                      elevation: 5,
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(30.0),
-                                              topRight: Radius.circular(30.0))),
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          const ChangeLagSheet(),
-                                    ),
-                                  );
+                                      title: lang.profile.bhs,
+                                      suffix: _isIndo ? 'Indonesia' : 'English',
+                                      onPreseed: () {
+                                        showModalBottomSheet(
+                                          barrierColor:
+                                              ColorSty.grey.withOpacity(0.2),
+                                          elevation: 5,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft:
+                                                      Radius.circular(30.0),
+                                                  topRight:
+                                                      Radius.circular(30.0))),
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              const ChangeLagSheet(),
+                                        );
+                                      });
                                 },
                               ),
                             ],
@@ -325,8 +328,6 @@ class TileListProfile extends StatefulWidget {
 }
 
 class _TileListProfileState extends State<TileListProfile> {
-  final TextEditingController _editingController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -344,45 +345,7 @@ class _TileListProfileState extends State<TileListProfile> {
             horizontal: SpaceDims.sp18,
           ),
           child: TextButton(
-            onPressed: widget.onPreseed ??
-                () => showModalBottomSheet(
-                      isScrollControlled: true,
-                      barrierColor: ColorSty.grey.withOpacity(0.2),
-                      elevation: 5,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30.0),
-                              topRight: Radius.circular(30.0))),
-                      context: context,
-                      builder: (BuildContext context) => BottomSheetDetailMenu(
-                        title: widget.title,
-                        content: Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                maxLength: 100,
-                                controller: _editingController,
-                                decoration: InputDecoration(
-                                  hintText: widget.suffix,
-                                  contentPadding: const EdgeInsets.all(0),
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(0),
-                                minimumSize: const Size(25.0, 25.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100.0),
-                                ),
-                              ),
-                              child: const Icon(Icons.check, size: 26.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+            onPressed: widget.onPreseed ?? () {},
             style: TextButton.styleFrom(
               primary: ColorSty.black,
               padding: const EdgeInsets.all(SpaceDims.sp8),
@@ -396,15 +359,18 @@ class _TileListProfileState extends State<TileListProfile> {
                   children: [
                     if (widget.button != null)
                       ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('Nilai sekarang'),
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(
-                                          color: ColorSty.primary))))),
+                        onPressed: () {},
+                        child: const Text('Nilai sekarang'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: const BorderSide(color: ColorSty.primary),
+                            ),
+                          ),
+                        ),
+                      ),
                     if (widget.suffix != null)
                       Text(
                         widget.suffix.toString(),

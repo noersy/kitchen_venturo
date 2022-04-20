@@ -59,7 +59,7 @@ class _CustomButtonState extends State<CustomButton> {
                 text: widget.label,
                 isBold: true,
                 color: widget.fontColor ?? Colors.white,
-                fontSize: 16,
+                fontSize: 14,
               ),
             ],
           ),

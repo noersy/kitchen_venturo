@@ -16,7 +16,7 @@ class SelectionVoucherPage extends StatefulWidget {
 }
 
 class _SelectionVoucherPageState extends State<SelectionVoucherPage> {
-  Map<String, dynamic> _selectedVoucher = {};
+  final Map<String, dynamic> _selectedVoucher = {};
 
   @override
   void initState() {

@@ -40,7 +40,7 @@ class OrderDoneDialog extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: "Montserrat",
-                            fontSize: 20.sp,
+                            fontSize: 18.sp,
                           ),
                         ),
                         SizedBox(height: 8.h),

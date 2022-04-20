@@ -109,7 +109,7 @@ class ConnectionStatus {
           hasLock >= 1) {
         hasLock--;
         _navigatorKey!.currentState!.pushNamedAndRemoveUntil('/', (_) => false);
-        _navigatorKey!.currentState!.pushReplacement(routeTransition(LoginPage()));
+        _navigatorKey!.currentState!.pushReplacement(routeTransition(const LoginPage()));
       }
     }
 

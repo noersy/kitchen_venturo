@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kitchen/constans/tools.dart';
@@ -83,7 +85,6 @@ class _DetailOrderState extends State<DetailOrder> {
       ),
       bottomNavigationBar: Container(
         width: double.infinity,
-        height: 300,
         decoration: const BoxDecoration(
           color: ColorSty.grey80,
           borderRadius: BorderRadius.only(
@@ -93,83 +94,79 @@ class _DetailOrderState extends State<DetailOrder> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: SpaceDims.sp24),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: SpaceDims.sp24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Total Pesanan ",
-                              style: TypoSty.captionSemiBold,
-                            ),
-                            Text("(${widget.dataOrder.menu.length} Menu) :",
-                                style: TypoSty.caption),
-                          ],
-                        ),
-                        Text(
-                          "Rp ${oCcy.format(widget.dataOrder.totalBayar)}",
-                          style: TypoSty.subtitle.copyWith(
-                            color: ColorSty.primary,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: SpaceDims.sp24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Total Pesanan ",
+                            style: TypoSty.captionSemiBold,
                           ),
+                          Text("(${widget.dataOrder.menu.length} Menu) :",
+                              style: TypoSty.caption),
+                        ],
+                      ),
+                      Text(
+                        "Rp ${oCcy.format(widget.dataOrder.totalBayar)}",
+                        style: TypoSty.subtitle.copyWith(
+                          color: ColorSty.primary,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: SpaceDims.sp14),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: SpaceDims.sp24,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TileListDMenu(
-                          dense: true,
-                          title: "Diskon 20%",
-                          // prefix: widget.dataOrder["voucher"]["title"] ??
-                          //     "Rp 4.000",
-                          textStylePrefix:
-                              const TextStyle(color: Colors.redAccent),
-                          iconSvg: SvgPicture.asset(
-                              "assert/image/icons/discount-icon.svg",
-                              height: 24.0),
-                          onPressed: () {},
-                        ),
-                        Stack(children: [
-                          TileListDMenu(
-                            dense: true,
-                            title: "Pembayaran",
-                            prefix: "Pay Leter",
-                            icon: IconsCs.coins,
-                            onPressed: () {},
-                          ),
-                        ]),
-                        TileListDMenu(
-                          dense: true,
-                          title: "Total Pembayaran",
-                          prefix:
-                              "Rp ${oCcy.format(widget.dataOrder.totalBayar)}",
-                          textStylePrefix: TypoSty.titlePrimary,
-                          onPressed: () {},
-                        ),
-                        const SizedBox(height: SpaceDims.sp4),
-                        if (_sudahDiTerima == 'belum')
-                          buttonTerimaBatalPesanan(context),
-                        if (_sudahDiTerima != 'belum') StatusBar(context),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                ),
+                const SizedBox(height: SpaceDims.sp14),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: SpaceDims.sp24,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TileListDMenu(
+                        dense: true,
+                        title: "Diskon 20%",
+                        textStylePrefix:
+                            const TextStyle(color: Colors.redAccent),
+                        iconSvg: SvgPicture.asset(
+                            "assert/image/icons/discount-icon.svg",
+                            height: 24.0),
+                        onPressed: () {},
+                      ),
+                      TileListDMenu(
+                        dense: true,
+                        title: "Pembayaran",
+                        prefix: "Pay Leter",
+                        icon: IconsCs.coins,
+                        onPressed: () {},
+                      ),
+                      TileListDMenu(
+                        dense: true,
+                        title: "Total Pembayaran",
+                        prefix:
+                            "Rp ${oCcy.format(widget.dataOrder.totalBayar)}",
+                        textStylePrefix: TypoSty.titlePrimary,
+                        onPressed: () {},
+                      ),
+                      const SizedBox(height: SpaceDims.sp4),
+                      if (_sudahDiTerima == 'belum')
+                        buttonTerimaBatalPesanan(context),
+                      if (_sudahDiTerima != 'belum') statusBar(context),
+                      const SizedBox(height: SpaceDims.sp20),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -247,7 +244,7 @@ class _DetailOrderState extends State<DetailOrder> {
     );
   }
 
-  Widget StatusBar(BuildContext context) {
+  Widget statusBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
         left: SpaceDims.sp18,
@@ -286,17 +283,18 @@ class _DetailOrderState extends State<DetailOrder> {
                       child: Text(
                         "Pesanan diterima",
                         textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 10),
                       ),
                     ),
                   ],
                 ),
               ),
-              const Expanded(child: Divider(thickness: 0)),
-              ButtonBottomStatusBar(
-                  context, 'silahkan diambil', 2, widget.dataOrder.idOrder),
-              const Expanded(child: Divider(thickness: 0)),
-              ButtonBottomStatusBar(
-                  context, 'pesanan selesai', 3, widget.dataOrder.idOrder),
+              const Expanded(child: SizedBox()),
+              buttonBottomStatusBar(
+                  context, 'Silahkan diambil', 2, widget.dataOrder.idOrder),
+              const Expanded(child: SizedBox()),
+              buttonBottomStatusBar(
+                  context, 'Pesanan selesai', 3, widget.dataOrder.idOrder),
             ],
           ),
         ],
@@ -304,7 +302,7 @@ class _DetailOrderState extends State<DetailOrder> {
     );
   }
 
-  Expanded ButtonBottomStatusBar(BuildContext context, text, status, idorder) {
+  Expanded buttonBottomStatusBar(BuildContext context, text, status, idorder) {
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -327,15 +325,19 @@ class _DetailOrderState extends State<DetailOrder> {
           );
         },
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             if (_sudahDiTerima != text && _sudahDiTerima != 'pesanan selesai')
-              SizedBox(
-                height: 10,
-                width: 10,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(100.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 10),
+                child: SizedBox(
+                  height: 10,
+                  width: 10,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(100.0),
+                    ),
                   ),
                 ),
               ),
@@ -344,13 +346,15 @@ class _DetailOrderState extends State<DetailOrder> {
                 Icons.check_circle,
                 color: ColorSty.primary,
               ),
+            const SizedBox(height: SpaceDims.sp4),
             Padding(
-              padding: EdgeInsets.all(SpaceDims.sp2),
+              padding: const EdgeInsets.all(SpaceDims.sp2),
               child: SizedBox(
                 width: 60,
                 child: Text(
                   "$text",
                   textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 10),
                 ),
               ),
             ),
@@ -413,14 +417,14 @@ class UpdateStatusDialog extends StatelessWidget {
                 ),
                 Text(
                   title,
-                  style: TypoSty.title.copyWith(fontSize: 23.0),
+                  style: TypoSty.title.copyWith(fontSize: 20.0),
                 ),
                 const SizedBox(height: SpaceDims.sp4),
                 Text(
                   caption,
                   textAlign: TextAlign.center,
                   style: TypoSty.caption
-                      .copyWith(fontSize: 14.0, color: ColorSty.black60),
+                      .copyWith(fontSize: 12.0, color: ColorSty.black60),
                 ),
                 const SizedBox(height: SpaceDims.sp12),
                 TextButton(

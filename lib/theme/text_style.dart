@@ -6,70 +6,70 @@ class TypoSty {
   static TextStyle heading = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.w700,
-    fontSize: ScreenUtil().setSp(26.0),
+    fontSize: ScreenUtil().setSp(24.0),
   );
 
   static TextStyle title = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.bold,
     color: ColorSty.black,
-    fontSize: ScreenUtil().setSp(16.0),
+    fontSize: ScreenUtil().setSp(14.0),
   );
 
   static TextStyle titlePrimary = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.bold,
     color: ColorSty.primary,
-    fontSize: ScreenUtil().setSp(16.0),
+    fontSize: ScreenUtil().setSp(14.0),
   );
 
   static TextStyle subtitle = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.bold,
-    fontSize: ScreenUtil().setSp(16.0),
+    fontSize: ScreenUtil().setSp(14.0),
   );
 
   static TextStyle subtitle2 = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.w600,
-    fontSize: ScreenUtil().setSp(16.0),
+    fontSize: ScreenUtil().setSp(14.0),
   );
 
   static TextStyle title2 = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.normal,
-    fontSize: ScreenUtil().setSp(20.0),
+    fontSize: ScreenUtil().setSp(18.0),
   );
 
   static TextStyle caption = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.normal,
-    fontSize: ScreenUtil().setSp(16.0),
+    fontSize: ScreenUtil().setSp(14.0),
   );
 
   static TextStyle captionSemiBold = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.w600,
-    fontSize: ScreenUtil().setSp(16.0),
+    fontSize: ScreenUtil().setSp(14.0),
   );
 
   static TextStyle captionBold = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.bold,
-    fontSize: ScreenUtil().setSp(16.0),
+    fontSize: ScreenUtil().setSp(14.0),
   );
 
   static TextStyle caption2 = TextStyle(
     fontFamily: "Montserrat",
     fontWeight: FontWeight.bold,
     color: Colors.grey,
-    fontSize: ScreenUtil().setSp(16.0),
+    fontSize: ScreenUtil().setSp(14.0),
   );
 
   static TextStyle caption3 = TextStyle(
     fontFamily: "Montserrat",
     color: Colors.grey,
-    fontSize: ScreenUtil().setSp(16.0),
+    fontSize: ScreenUtil().setSp(14.0),
   );
 
   static TextStyle button = TextStyle(
@@ -86,6 +86,6 @@ class TypoSty {
 
   static TextStyle mini = TextStyle(
     fontWeight: FontWeight.normal,
-    fontSize: ScreenUtil().setSp(11.0),
+    fontSize: ScreenUtil().setSp(10.0),
   );
 }

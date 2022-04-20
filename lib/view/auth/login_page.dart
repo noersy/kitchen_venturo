@@ -5,17 +5,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kitchen/singletons/google_tools.dart';
 import 'package:kitchen/widget/custom_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:logging/logging.dart' as logging;
 import 'package:kitchen/constans/key_prefens.dart';
 import 'package:kitchen/providers/auth_providers.dart';
 import 'package:kitchen/route/route.dart';
 import 'package:kitchen/singletons/shared_preferences.dart';
 import 'package:kitchen/theme/colors.dart';
-import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
 import 'package:kitchen/widget/button_login.dart';
 import 'package:kitchen/widget/form_login.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -27,11 +24,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-
-  // final ConnectionStatus _connectionStatus = ConnectionStatus.getInstance();
   final Preferences _preferences = Preferences.getInstance();
   final _duration = const Duration(seconds: 1);
-  static final _log = logging.Logger('LoginPage');
 
   bool _loading = false;
 
@@ -101,9 +95,8 @@ class _LoginPageState extends State<LoginPage> {
           showSimpleDialog(context, loginResponse['message']);
         }
       }
-    } catch (e, r) {
-      _log.warning(e);
-      _log.warning(r);
+    } catch (e) {
+      return;
     }
     setState(() => _loading = false);
   }
@@ -169,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                           width: 339.0.w,
                           child: Text(
                             'Masuk untuk melanjutkan!',
-                            style: TypoSty.heading.copyWith(fontSize: 20.0.sp),
+                            style: TypoSty.heading.copyWith(fontSize: 18.0.sp),
                           ),
                         ),
                         SizedBox(height: 25.0.h),

@@ -17,27 +17,21 @@ class GeolocationStatus {
 
   void initialize() async {
     LocationPermission permission = await Geolocator.requestPermission();
-    if (permission != LocationPermission.denied || permission != LocationPermission.deniedForever) {
+    if (permission != LocationPermission.denied ||
+        permission != LocationPermission.deniedForever) {
       hasPermission = true;
-    }else{
+    } else {
       hasPermission = false;
     }
   }
 
   //The test to actually see if there is a connection
   Future<bool> checkConnection() async {
-    // bool previousLocation = inLocation;
-
     if (hasPermission) {
       try {
-        final result = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
         if (true) {
           inLocation = true;
-        } else {
-          inLocation = false;
         }
-
       } on TimeoutException catch (_) {
         inLocation = false;
       }

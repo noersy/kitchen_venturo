@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kitchen/transision/route_transisition.dart';
 import 'package:kitchen/view/auth/findlocation_page.dart';
 import 'package:kitchen/view/dashboard_page.dart';
-import 'package:kitchen/view/orders/detailmenu_page.dart';
 import 'package:kitchen/view/orders/detailvoucher_page.dart';
 import 'package:kitchen/view/orders/ongoingorder_page.dart';
 import 'package:kitchen/view/orders/ordersdetail_page.dart';

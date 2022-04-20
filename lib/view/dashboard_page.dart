@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kitchen/models/lang.dart';
 import 'package:kitchen/providers/lang_providers.dart';
 import 'package:kitchen/providers/order_providers.dart';
-import 'package:kitchen/route/route.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/icons_cs_icons.dart';
 import 'package:kitchen/theme/spacing.dart';

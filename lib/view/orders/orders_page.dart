@@ -24,7 +24,7 @@ class OrdersPage extends StatefulWidget {
 
 class _OrdersPageState extends State<OrdersPage> {
   OrderDetail? data;
-  bool _isLoading = false;
+  final bool _isLoading = false;
   getListOrder() async {
     if (mounted) setState(() => _loading = true);
     Provider.of<OrderProviders>(context, listen: false).listOrders.clear();
@@ -69,82 +69,91 @@ class _OrdersPageState extends State<OrdersPage> {
         profileTitle: "Pesanan",
         dense: true,
       ),
-      body: SmartRefresher(
-        onRefresh: _onRefresh,
-        controller: _refreshController,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: SpaceDims.sp18,
-              left: SpaceDims.sp18,
-              top: SpaceDims.sp12,
-            ),
-            child: AnimatedBuilder(
-              animation: OrderProviders(),
-              builder: (BuildContext context, Widget? child) {
-                final _orderOngoing =
-                    Provider.of<OrderProviders>(context).listOrders;
-                if (_orderOngoing.isNotEmpty) {
-                  return _loading
-                      ? const SkeletonOrderMenuCard()
-                      : Column(
-                          children: _orderOngoing.map((item) {
-                            return item.status == 0 ||
-                                    item.status == 1 ||
-                                    item.status == 2
-                                ? OrderMenuCard(
-                                    onPressed: () => Navigate.toDetailOrder(
-                                      context,
-                                      dataOrders: item,
-                                      onGoBack: onGoBack,
-                                    ),
-                                    date: item.tgl,
-                                    // harga: item["orders"][0]["harga"],
-                                    // title: item["orders"][0]["name"],
-                                    // urlImage: item["orders"][0]["image"],
+      body: _loading
+          ? const Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SpaceDims.sp18,
+                vertical: SpaceDims.sp14,
+              ),
+              child: SkeletonOrderMenuCard(),
+            )
+          : SmartRefresher(
+              onRefresh: _onRefresh,
+              controller: _refreshController,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: SpaceDims.sp18,
+                    left: SpaceDims.sp18,
+                    top: SpaceDims.sp12,
+                  ),
+                  child: AnimatedBuilder(
+                    animation: OrderProviders(),
+                    builder: (BuildContext context, Widget? child) {
+                      final _orderOngoing =
+                          Provider.of<OrderProviders>(context).listOrders;
+                      if (_orderOngoing.isNotEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 80),
+                          child: Column(
+                            children: _orderOngoing.map((item) {
+                              return item.status == 0 ||
+                                      item.status == 1 ||
+                                      item.status == 2
+                                  ? OrderMenuCard(
+                                      onPressed: () => Navigate.toDetailOrder(
+                                        context,
+                                        dataOrders: item,
+                                        onGoBack: onGoBack,
+                                      ),
+                                      date: item.tgl,
+                                      // harga: item["orders"][0]["harga"],
+                                      // title: item["orders"][0]["name"],
+                                      // urlImage: item["orders"][0]["image"],
 
-                                    harga: '${item.totalBayar}',
-                                    kodeStatus: item.status,
-                                    title: item.nama,
-                                    jumlahMenu: item.menu.length,
-                                    urlImage:
-                                        "assert/image/menu/1637916792.png",
-                                  )
-                                : const SizedBox();
-                          }).toList(),
+                                      harga: '${item.totalBayar}',
+                                      kodeStatus: item.status,
+                                      title: item.nama,
+                                      jumlahMenu: item.menu.length,
+                                      urlImage:
+                                          "assert/image/menu/1637916792.png",
+                                    )
+                                  : const SizedBox();
+                            }).toList(),
+                          ),
                         );
-                } else {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height - 200,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.asset("assert/image/bg_findlocation.png"),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              IconsCs.order,
-                              size: 120,
-                              color: ColorSty.primary,
-                            ),
-                            const SizedBox(height: SpaceDims.sp22),
-                            Text(
-                              "Sudah Pesan?\nLacak pesananmu\ndi sini.",
-                              textAlign: TextAlign.center,
-                              style: TypoSty.title2,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                }
-              },
+                      } else {
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height - 200,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Image.asset("assert/image/bg_findlocation.png"),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    IconsCs.order,
+                                    size: 120,
+                                    color: ColorSty.primary,
+                                  ),
+                                  const SizedBox(height: SpaceDims.sp22),
+                                  Text(
+                                    "Sudah Pesan?\nLacak pesananmu\ndi sini.",
+                                    textAlign: TextAlign.center,
+                                    style: TypoSty.title2,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -241,7 +250,7 @@ class OrderMenuCard extends StatelessWidget {
                       const SizedBox(height: SpaceDims.sp4),
                       Text(
                         title,
-                        style: TypoSty.title.copyWith(fontSize: 20.0),
+                        style: TypoSty.title.copyWith(fontSize: 18.0),
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: SpaceDims.sp2),
@@ -250,7 +259,7 @@ class OrderMenuCard extends StatelessWidget {
                           Text(
                             "Rp ${oCcy.format(int.parse(harga))}",
                             style: TypoSty.mini.copyWith(
-                              fontSize: 14.0,
+                              fontSize: 12.0,
                               color: ColorSty.primary,
                             ),
                           ),
@@ -258,13 +267,13 @@ class OrderMenuCard extends StatelessWidget {
                           Text(
                             "($jumlahMenu Menu)",
                             style: TypoSty.mini.copyWith(
-                              fontSize: 12.0,
+                              fontSize: 10.0,
                               color: ColorSty.grey,
                             ),
                           ),
                         ],
                       ),
-                      // const SizedBox(height: SpaceDims.sp12),
+                      const SizedBox(height: SpaceDims.sp12),
                     ],
                   ),
                 ),

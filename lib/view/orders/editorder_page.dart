@@ -26,7 +26,6 @@ class EditOrderPage extends StatefulWidget {
 
 class _EditOrderPageState extends State<EditOrderPage> {
   String _selectedLevel = "1";
-  List<String> _selectedTopping = [];
 
   late final String urlImage, name, harga, id;
   late final int amount;

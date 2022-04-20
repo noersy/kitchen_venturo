@@ -30,7 +30,7 @@ class _DetailMenuState extends State<DetailMenu> {
   late final int amount;
   int _jumlahOrder = 0;
   String _selectedLevel = "1";
-  List<String> _selectedTopping = ["Mozarella"];
+  final List<String> _selectedTopping = ["Mozarella"];
 
   @override
   void initState() {
