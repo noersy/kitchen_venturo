@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:kitchen/constans/get_header.dart';
+import 'package:kitchen/route/route.dart';
 import 'package:kitchen/tools/random_string.dart';
 import 'package:http/http.dart' as http;
+import 'package:kitchen/widget/custom_dialog.dart';
 import '../constans/hosts.dart';
 import '../models/listhistory.dart';
 import '../models/listorder.dart';
@@ -18,6 +22,8 @@ class OrderProviders extends ChangeNotifier {
   List<Order> get listOrders => _orders;
   List<Order> get listHistorys => _histories;
   Map<String, dynamic> get checkOrder => _checkOrder;
+  static bool? _isNetworkError = false;
+  bool? get isNetworkError => _isNetworkError;
 
   List<Map<String, dynamic>> get orderProgress => _orderInProgress;
   clear() {
@@ -25,6 +31,33 @@ class OrderProviders extends ChangeNotifier {
     _orderInProgress = [];
     _orders = [];
     notifyListeners();
+  }
+
+  setNetworkError(
+    bool status, {
+    BuildContext? context,
+    String? title,
+    Function? then,
+  }) {
+    if (!_isNetworkError! && status) {
+      _isNetworkError = status;
+      notifyListeners();
+      if (context != null) {
+        _isNetworkError = false;
+        notifyListeners();
+        Navigate.toOfflinePage(
+          context,
+          title!,
+          then: () {
+            if (then != null) {
+              then();
+            }
+          },
+        );
+      }
+    } else {
+      _isNetworkError = status;
+    }
   }
 
   addOrder({
@@ -81,53 +114,93 @@ class OrderProviders extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> getListOrder() async {
+  Future<bool> getListOrder(BuildContext context) async {
+    if (_isNetworkError!) return false;
     try {
       final _api = Uri.http(host, "$sub/api/order/all");
       final response = await http.get(
         _api,
         headers: await getHeader(),
       );
-      if (response.statusCode == 204 ||
-          json.decode(response.body)["status_code"] == 204) {
-        _orders = [];
-      }
-      if (response.statusCode == 200 &&
-          json.decode(response.body)["status_code"] == 200) {
+
+      var responseBody = json.decode(response.body);
+      if (response.statusCode == 200 && responseBody["status_code"] == 200) {
+        await setNetworkError(false);
         _orders = listOrderFromJson(response.body).data;
         notifyListeners();
         return true;
+      } else {
+        _orders = [];
       }
       return false;
+    } on SocketException {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
+    } on TimeoutException {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi time out.',
+      );
+      return false;
     } catch (e) {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
       return false;
     }
   }
 
-  Future<bool> getListHistory() async {
+  Future<bool> getListHistory(BuildContext context) async {
+    if (_isNetworkError!) return false;
     try {
       final _api = Uri.http(host, "$sub/api/order/all");
-      final response = await http.get(
-        _api,
-        headers: await getHeader(),
-      );
-      if (response.statusCode == 204 ||
-          json.decode(response.body)["status_code"] == 204) {
-        _histories = [];
-      }
-      if (response.statusCode == 200 &&
-          json.decode(response.body)["status_code"] == 200) {
+      final response = await http
+          .get(_api, headers: await getHeader())
+          .timeout(const Duration(seconds: 4));
+
+      var responseBody = json.decode(response.body);
+      if (response.statusCode == 200 && responseBody["status_code"] == 200) {
+        await setNetworkError(false);
         _histories = listOrderFromJson(response.body).data;
         notifyListeners();
         return true;
+      } else {
+        _histories = [];
       }
       return false;
+    } on SocketException {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
+    } on TimeoutException {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi time out.',
+      );
+      return false;
     } catch (e) {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
       return false;
     }
   }
 
-  Future<bool> postUpdateStatus(status, idOrder) async {
+  Future<bool> postUpdateStatus(BuildContext context, status, idOrder) async {
+    if (_isNetworkError!) return false;
     try {
       final Map<String, String> _queryParameters = <String, String>{
         'status': '$status',
@@ -139,39 +212,96 @@ class OrderProviders extends ChangeNotifier {
         headers: await getHeader(),
       );
 
-      if (response.statusCode == 204 ||
-          json.decode(response.body)["status_code"] == 204) {
-        _orders = [];
-      }
-      if (response.statusCode == 200 &&
-          json.decode(response.body)["status_code"] == 200) {
+      var responseBody = json.decode(response.body);
+      if (response.statusCode == 200 && responseBody["status_code"] == 200) {
+        await setNetworkError(false);
         _orders = listOrderFromJson(response.body).data;
         notifyListeners();
         return true;
+      } else {
+        _orders = [];
+        showSimpleDialog(
+          context,
+          responseBody['message'] ?? responseBody['errors']?[0] ?? '',
+        );
       }
       return false;
+    } on SocketException {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
+    } on TimeoutException {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi time out.',
+      );
+      return false;
     } catch (e) {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
       return false;
     }
   }
 
-  Future<List<Order>?> getOrderLimit(limit, start) async {
-    try {
-      final response = await http.get(
-        Uri.parse("https://$host/api/order/all?limit=$limit&offset=$start"),
-        headers: await getHeader(),
-      );
+  Future<ListHistory?> getOrderLimit(
+    BuildContext context,
+    limit,
+    start,
+    String startDate,
+    String endDate,
+  ) async {
+    if (_isNetworkError!) return null;
 
-      if (response.statusCode == 204) {
-        return [];
-      }
+    try {
+      Map<String, dynamic>? request = {
+        "limit": limit,
+        "offset": start,
+        "tanggal": {"startDate": startDate, "endDate": endDate},
+      };
+
+      final response = await http
+          .post(
+            Uri.http(host, '$sub/api/order/all'),
+            body: jsonEncode(request),
+            headers: await getHeader(),
+          )
+          .timeout(const Duration(seconds: 4));
+
       if (response.statusCode == 200 &&
           json.decode(response.body)["status_code"] == 200) {
-        return listHistoryFromJson(response.body).data;
+        await setNetworkError(false);
+        return listHistoryFromJson(response.body);
+      } else {
+        return null;
       }
+    } on SocketException {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return null;
+    } on TimeoutException {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi time out.',
+      );
+      return null;
     } catch (e) {
+      setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
       return null;
     }
-    return null;
   }
 }

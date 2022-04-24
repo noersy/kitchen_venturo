@@ -8,6 +8,7 @@ import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/icons_cs_icons.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
+import 'package:kitchen/tools/check_connectivity.dart';
 import 'package:kitchen/widget/appbar.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -28,7 +29,8 @@ class _OrdersPageState extends State<OrdersPage> {
   getListOrder() async {
     if (mounted) setState(() => _loading = true);
     Provider.of<OrderProviders>(context, listen: false).listOrders.clear();
-    await Provider.of<OrderProviders>(context, listen: false).getListOrder();
+    await Provider.of<OrderProviders>(context, listen: false)
+        .getListOrder(context);
     if (mounted) setState(() => _loading = false);
   }
 
@@ -38,9 +40,23 @@ class _OrdersPageState extends State<OrdersPage> {
     });
   }
 
+  checkConnectivity() async {
+    bool isAnyConnection = await checkConnection();
+    if (isAnyConnection) {
+      getListOrder();
+    } else {
+      Provider.of<OrderProviders>(context, listen: false).setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi anda terputus',
+        then: () => checkConnectivity(),
+      );
+    }
+  }
+
   @override
   void initState() {
-    getListOrder();
+    checkConnectivity();
     super.initState();
   }
 

@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:kitchen/models/listhistory.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/icons_cs_icons.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
+import 'package:kitchen/tools/check_connectivity.dart';
 import 'package:kitchen/widget/appbar.dart';
 import 'package:loadmore/loadmore.dart';
 import 'package:provider/provider.dart';
@@ -22,49 +25,45 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  static DateTime? _dateStart;
-  static DateTime? _dateEnd;
   static List<Order> _data = [];
   static List<Order> _orders = [];
   static final DateTime _dateNow = DateTime.now();
-  String _dateRange = dateFormat.format(_dateNow) +
-      " - " +
-      dateFormat.format(
-        DateTime(_dateNow.year, _dateNow.month, _dateNow.day + 7),
-      );
+  static DateTime? _dateStart = DateTime(_dateNow.year, _dateNow.month - 1);
+  static DateTime? _dateEnd = _dateNow;
+  final String _dateRange =
+      dateFormat.format(_dateStart!) + " - " + dateFormat.format(_dateEnd!);
   int statusCode = 3;
   String _dropdownValue = 'Semua Status';
   final List<String> _item = ["Semua Status", "Selesai", "Dibatalkan"];
   bool _loading = true;
   bool isFinisfLoadmore = false;
   bool _loadingLoadMore = false;
-  var totalHistory = 0;
-
-  getListHisory() async {
-    if (mounted) setState(() => _loading = true);
-    Provider.of<OrderProviders>(context, listen: false).listHistorys.clear();
-    await Provider.of<OrderProviders>(context, listen: false).getListHistory();
-    if (mounted) {
-      setState(() {
-        totalHistory = Provider.of<OrderProviders>(context, listen: false)
-            .listHistorys
-            .length;
-        _loading = false;
-      });
-    }
-  }
+  int totalHistory = 0;
+  int totalPrice = 0;
 
   Future<void> _onRefresh() async {
     if (mounted) {
-      getListHisory();
       _loadStart();
+    }
+  }
+
+  checkConnectivity() async {
+    bool isAnyConnection = await checkConnection();
+    if (isAnyConnection) {
+      _loadStart();
+    } else {
+      Provider.of<OrderProviders>(context, listen: false).setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi anda terputus',
+        then: () => checkConnectivity(),
+      );
     }
   }
 
   @override
   void initState() {
-    getListHisory();
-    _loadStart();
+    checkConnectivity();
     super.initState();
   }
 
@@ -86,7 +85,6 @@ class _HistoryPageState extends State<HistoryPage> {
               (element.tglDatetime.compareTo(_dateStart!) >= 0 &&
                   element.tglDatetime.compareTo(_dateEnd!) <= 0))
           .toList();
-      setState(() {});
     }
   }
 
@@ -109,12 +107,21 @@ class _HistoryPageState extends State<HistoryPage> {
   getMoredata() async {
     if (mounted) {
       setState(() => _loadingLoadMore = true);
-      _orders = (await Provider.of<OrderProviders>(context, listen: false)
-              .getOrderLimit(5, _data.length)) ??
-          [];
+      ListHistory? dataOrder =
+          await Provider.of<OrderProviders>(context, listen: false)
+              .getOrderLimit(
+        context,
+        10,
+        0,
+        _dateStart == null ? '' : DateFormat('yyyy-MM-dd').format(_dateStart!),
+        _dateEnd == null ? '' : DateFormat('yyyy-MM-dd').format(_dateEnd!),
+      );
+
       if (mounted) {
         setState(() {
-          _data.addAll(_orders);
+          _data.addAll(dataOrder!.data);
+          totalHistory = dataOrder.totalOrder;
+          totalPrice = dataOrder.totalPrice;
           _loadingLoadMore = false;
         });
       }
@@ -128,14 +135,23 @@ class _HistoryPageState extends State<HistoryPage> {
     if (mounted) {
       setState(() => _loading = true);
 
-      _orders = (await Provider.of<OrderProviders>(context, listen: false)
-              .getOrderLimit(10, 0)) ??
-          [];
-      _data = _orders;
+      ListHistory? dataOrder =
+          await Provider.of<OrderProviders>(context, listen: false)
+              .getOrderLimit(
+        context,
+        10,
+        0,
+        _dateStart == null ? '' : DateFormat('yyyy-MM-dd').format(_dateStart!),
+        _dateEnd == null ? '' : DateFormat('yyyy-MM-dd').format(_dateEnd!),
+      );
 
       Timer(_duration, () {
         if (mounted) {
           setState(() {
+            _orders = dataOrder!.data;
+            _data = dataOrder.data;
+            totalHistory = dataOrder.totalOrder;
+            totalPrice = dataOrder.totalPrice;
             _loading = false;
           });
         }
@@ -165,6 +181,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 textBuilder: DefaultLoadMoreTextBuilder.english,
                 isFinish: isFinisfLoadmore,
                 onLoadMore: _loadMore,
+                whenEmptyLoad: false,
                 child: ListView(
                   children: [
                     Padding(
@@ -238,7 +255,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                     children: [
                                       const SizedBox(width: SpaceDims.sp12),
                                       Text(
-                                        "25/12/21 - 30/12/21",
+                                        _dateRange,
                                         style: TypoSty.caption2.copyWith(
                                             fontSize: 10.0,
                                             fontWeight: FontWeight.w600),

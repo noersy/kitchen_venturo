@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kitchen/constans/tools.dart';
@@ -186,11 +184,11 @@ class _DetailOrderState extends State<DetailOrder> {
                 builder: (_) => UpdateStatusDialog(
                   onPressed: () {
                     Provider.of<OrderProviders>(context, listen: false)
-                        .postUpdateStatus(4, widget.dataOrder.idOrder)
-                        .then((value) => {
-                              Navigator.pop(context),
-                              Navigator.pop(context),
-                            });
+                        .postUpdateStatus(context, 4, widget.dataOrder.idOrder)
+                        .then((value) {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    });
                   },
                   title: "Batal Order",
                   iconData: Icons.remove_circle_outline_rounded,
@@ -220,7 +218,7 @@ class _DetailOrderState extends State<DetailOrder> {
                 builder: (_) => UpdateStatusDialog(
                   onPressed: () {
                     Provider.of<OrderProviders>(context, listen: false)
-                        .postUpdateStatus(1, widget.dataOrder.idOrder)
+                        .postUpdateStatus(context, 1, widget.dataOrder.idOrder)
                         .then((value) =>
                             {setState(() => _sudahDiTerima = 'sudahDiterima')});
                     Navigator.pop(context);
@@ -312,7 +310,7 @@ class _DetailOrderState extends State<DetailOrder> {
             builder: (_) => UpdateStatusDialog(
               onPressed: () {
                 Provider.of<OrderProviders>(context, listen: false)
-                    .postUpdateStatus(status, idorder)
+                    .postUpdateStatus(context, status, idorder)
                     .then(
                         (value) => {setState(() => _sudahDiTerima = '$text')});
                 Navigator.pop(context);

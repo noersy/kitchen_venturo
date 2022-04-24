@@ -8,6 +8,8 @@ import 'package:kitchen/singletons/user_instance.dart';
 import 'package:kitchen/theme/colors.dart';
 import 'package:kitchen/theme/spacing.dart';
 import 'package:kitchen/theme/text_style.dart';
+import 'package:kitchen/tools/check_connectivity.dart';
+import 'package:kitchen/tools/firebase_config.dart';
 import 'package:kitchen/widget/appbar.dart';
 import 'package:kitchen/widget/detailmenu_sheet.dart';
 import 'package:kitchen/widget/vp_pin_dialog.dart';
@@ -22,11 +24,31 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   _logout() {
-    Navigator.pushReplacementNamed(context, "/");
+    unSubscribeTopic();
     Preferences.getInstance().clear();
     GoogleLogin.getInstance().logout();
     UserInstance.getInstance().clear();
     Provider.of<OrderProviders>(context, listen: false).clear();
+    Navigator.pushReplacementNamed(context, "/");
+  }
+
+  checkConnectivity() async {
+    bool isAnyConnection = await checkConnection();
+    if (!isAnyConnection) {
+      Provider.of<OrderProviders>(context, listen: false).setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi anda terputus',
+        then: () => checkConnectivity(),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkConnectivity();
   }
 
   @override

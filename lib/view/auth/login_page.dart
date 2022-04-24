@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kitchen/providers/order_providers.dart';
 import 'package:kitchen/singletons/google_tools.dart';
+import 'package:kitchen/tools/check_connectivity.dart';
+import 'package:kitchen/tools/firebase_config.dart';
 import 'package:kitchen/widget/custom_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:kitchen/constans/key_prefens.dart';
@@ -33,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => _loading = true);
     Map loginResponse =
         await Provider.of<AuthProviders>(context, listen: false).login(
+      context,
       _controllerEmail.text,
       _controllerPassword.text,
       isGoogle: false,
@@ -48,28 +52,12 @@ class _LoginPageState extends State<LoginPage> {
       return;
     } else {
       showSimpleDialog(context, loginResponse['message']);
-      // showDialog(
-      //     context: context,
-      //     builder: (context) {
-      //       return AlertDialog(
-      //         title: const Text(
-      //             'Email/password anda salah!\nAnda belum mendaftar?'),
-      //         // content: Text('email '),
-      //         actions: <Widget>[
-      //           TextButton(
-      //               onPressed: () {
-      //                 Navigator.pop(context);
-      //               },
-      //               child: const Text('Close')),
-      //         ],
-      //       );
-      //     });
     }
 
     setState(() => _loading = false);
   }
 
-  _loginWithGoogle() async {
+  _loginWithGoogle(context) async {
     setState(() => _loading = true);
     try {
       final user = await GoogleLogin.getInstance().login();
@@ -77,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null) {
         Map loginResponse =
             await Provider.of<AuthProviders>(context, listen: false).login(
+          context,
           user.email,
           _controllerPassword.text,
           isGoogle: true,
@@ -85,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
 
         if (loginResponse['status']) {
           await _preferences.setBoolValue(KeyPrefens.login, true);
-
+          subscribeTopic();
           Timer(_duration, () {
             Navigate.toFindLocation(context);
             setState(() => _loading = false);
@@ -102,29 +91,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _checkInternet() async {
-    // final _isConnected = await _connectionStatus.checkConnection();
-  }
-
-  _checkPrefens() async {
-    bool _isAlreadyLogin = await _preferences.getBoolValue(KeyPrefens.login);
-    if (_isAlreadyLogin) {
-      setState(() => _loading = true);
-      final id = await _preferences.getIntValue(KeyPrefens.loginID);
-      await Provider.of<AuthProviders>(context, listen: false).getUser(id: id);
-
-      if (mounted) {
-        Timer(_duration, () {
-          Navigate.toFindLocation(context);
-          setState(() => _loading = false);
-        });
-      }
+    bool isAnyConnection = await checkConnection();
+    if (!isAnyConnection) {
+      Provider.of<OrderProviders>(context, listen: false).setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi anda terputus',
+      );
     }
   }
 
   @override
   void initState() {
+    notifHandling();
     _checkInternet();
-    _checkPrefens();
     super.initState();
   }
 

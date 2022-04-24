@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.venturo.kitchen.kitchen">
+    package="com.venturo.kitchen">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="kitchen"
@@ -31,5 +31,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />
     </application>
 </manifest>

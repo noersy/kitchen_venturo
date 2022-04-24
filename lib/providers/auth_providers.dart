@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_adjacent_string_concatenation
 
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -9,9 +11,12 @@ import 'package:kitchen/constans/hosts.dart';
 import 'package:kitchen/constans/key_prefens.dart';
 import 'package:kitchen/models/loginuser.dart';
 import 'package:kitchen/models/userdetail.dart';
+import 'package:kitchen/providers/order_providers.dart';
 import 'package:kitchen/singletons/shared_preferences.dart';
 import 'package:kitchen/singletons/user_instance.dart';
+import 'package:kitchen/widget/custom_dialog.dart';
 import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
 
 class AuthProviders extends ChangeNotifier {
   static LoginUser? _loginUser;
@@ -24,13 +29,24 @@ class AuthProviders extends ChangeNotifier {
   }
 
   Future<Map> login(
+    BuildContext context,
     String email,
     String? password, {
     bool? isGoogle = false,
     String? nama = "",
   }) async {
-    final Uri _api = Uri.http(host, "$sub/api/auth/login");
+    OrderProviders orderProviders =
+        Provider.of<OrderProviders>(context, listen: false);
+
+    if (orderProviders.isNetworkError!) {
+      return {
+        'status': false,
+        'message': 'Login gagal',
+      };
+    }
+
     try {
+      final Uri _api = Uri.http(host, "$sub/api/auth/login");
       final body = <String, dynamic>{
         "email": email,
         "password": password,
@@ -73,25 +89,58 @@ class AuthProviders extends ChangeNotifier {
           };
         }
       }
-    } catch (e, r) {
-      _log.warning(e);
-      _log.warning(r);
+    } on SocketException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+
+      return {
+        'status': false,
+        'message': 'Login gagal',
+      };
+    } on TimeoutException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi time out.',
+      );
+      return {
+        'status': false,
+        'message': 'Login gagal',
+      };
+    } catch (e) {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return {
+        'status': false,
+        'message': 'Login gagal',
+      };
     }
     return {
-      'status': true,
+      'status': false,
       'message': 'Login gagal',
     };
   }
 
-  Future<bool> getUser({id}) async {
+  Future<bool> getUser(BuildContext context, {id}) async {
+    OrderProviders orderProviders =
+        Provider.of<OrderProviders>(context, listen: false);
+
+    if (orderProviders.isNetworkError!) {
+      return false;
+    }
+
     final user = UserInstance.getInstance().user;
     if (user == null && id == null) return false; //@todo make new exception
 
-    final _id = id ?? user!.data.idUser;
-    final Uri _api = Uri.http(host, "$sub/api/user/detail/$_id");
-
     try {
-      _log.fine("Tray to get data user.");
+      final _id = id ?? user!.data.idUser;
+      final Uri _api = Uri.http(host, "$sub/api/user/detail/$_id");
       final response = await http.get(
         _api,
         headers: await getHeader(),
@@ -106,15 +155,39 @@ class AuthProviders extends ChangeNotifier {
         notifyListeners();
         return true;
       }
-    } catch (e, r) {
-      _log.warning(e);
-      _log.warning(r);
+    } on SocketException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
+    } on TimeoutException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi time out.',
+      );
+      return false;
+    } catch (e) {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
     }
-
     return false;
   }
 
-  Future<bool> update({id, key, value}) async {
+  Future<bool> update(BuildContext context, {id, key, value}) async {
+    OrderProviders orderProviders =
+        Provider.of<OrderProviders>(context, listen: false);
+
+    if (orderProviders.isNetworkError!) {
+      return false;
+    }
+
     final user = UserInstance.getInstance().user;
     if (user == null) return false;
 
@@ -130,31 +203,58 @@ class AuthProviders extends ChangeNotifier {
         headers: await getHeader(),
         body: body,
       );
-      // print('response edit nama ${response.body}');
-      if (response.statusCode == 200 &&
-          json.decode(response.body)["status_code"] == 200) {
-        _log.fine("Success update $key user.");
-        getUser();
+
+      var responseBody = json.decode(response.body);
+      if (response.statusCode == 200 && responseBody["status_code"] == 200) {
+        getUser(context);
         return true;
+      } else {
+        showSimpleDialog(
+          context,
+          responseBody['message'] ?? responseBody['errors']?[0] ?? '',
+        );
       }
-    } catch (e, r) {
-      _log.warning(e);
-      _log.warning(r);
+    } on SocketException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
+    } on TimeoutException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi time out.',
+      );
+      return false;
+    } catch (e) {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
     }
     return false;
   }
 
-  Future<bool> uploadProfileImage(String base64) async {
+  Future<bool> uploadProfileImage(BuildContext context, String base64) async {
+    OrderProviders orderProviders =
+        Provider.of<OrderProviders>(context, listen: false);
+
+    if (orderProviders.isNetworkError!) {
+      return false;
+    }
+
     final user = UserInstance.getInstance().user;
-
     if (user == null) return false;
-
-    final Uri _api = Uri.http(
-      host,
-      "$sub/api/user/profil/${user.data.idUser}",
-    );
-
     try {
+      final Uri _api = Uri.http(
+        host,
+        "$sub/api/user/profil/${user.data.idUser}",
+      );
+
       final body = {"image": base64};
 
       _log.fine("Try update profile image.");
@@ -164,44 +264,95 @@ class AuthProviders extends ChangeNotifier {
         body: jsonEncode(body),
       );
 
-      if (response.statusCode == 200 &&
-          json.decode(response.body)["status_code"] == 200) {
+      var responseBody = json.decode(response.body);
+      if (response.statusCode == 200 && responseBody["status_code"] == 200) {
         if (_user == null) _log.info("Failed Upload profile image.");
         if (_user != null) _log.fine("Susses Upload profile image.");
-        getUser();
+        getUser(context);
         return true;
+      } else {
+        showSimpleDialog(
+          context,
+          responseBody['message'] ?? responseBody['errors']?[0] ?? '',
+        );
       }
+    } on SocketException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
+    } on TimeoutException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi time out.',
+      );
+      return false;
     } catch (e) {
-      // return false;
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
     }
     return false;
   }
 
-  Future<bool> uploadKtp(String base64) async {
-    final user = UserInstance.getInstance().user;
+  Future<bool> uploadKtp(BuildContext context, String base64) async {
+    OrderProviders orderProviders =
+        Provider.of<OrderProviders>(context, listen: false);
 
+    if (orderProviders.isNetworkError!) {
+      return false;
+    }
+
+    final user = UserInstance.getInstance().user;
     if (user == null) return false;
-    final Uri _api = Uri.http(host, "$sub/api/user/ktp/${user.data.idUser}");
 
     try {
+      final Uri _api = Uri.http(host, "$sub/api/user/ktp/${user.data.idUser}");
       final body = {"image": base64};
 
-      _log.fine("Tray upload ktp");
       final response = await http.post(
         _api,
         headers: await getHeader(),
         body: jsonEncode(body),
       );
 
-      if (response.statusCode == 200 &&
-          json.decode(response.body)["status_code"] == 200) {
-        _log.fine("Successes upload ktp");
-        getUser();
+      var responseBody = json.decode(response.body);
+      if (response.statusCode == 200 && responseBody["status_code"] == 200) {
+        getUser(context);
         return true;
+      } else {
+        showSimpleDialog(
+          context,
+          responseBody['message'] ?? responseBody['errors']?[0] ?? '',
+        );
       }
-    } catch (e, r) {
-      _log.warning(e);
-      _log.warning(r);
+    } on SocketException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
+    } on TimeoutException {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Koneksi time out.',
+      );
+      return false;
+    } catch (e) {
+      orderProviders.setNetworkError(
+        true,
+        context: context,
+        title: 'Terjadi masalah dengan server.',
+      );
+      return false;
     }
     return false;
   }
