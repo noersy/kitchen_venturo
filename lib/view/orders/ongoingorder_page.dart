@@ -131,16 +131,16 @@ class _DetailOrderState extends State<DetailOrder> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TileListDMenu(
-                        dense: true,
-                        title: "Diskon 20%",
-                        textStylePrefix:
-                            const TextStyle(color: Colors.redAccent),
-                        iconSvg: SvgPicture.asset(
-                            "assert/image/icons/discount-icon.svg",
-                            height: 24.0),
-                        onPressed: () {},
-                      ),
+                      // TileListDMenu(
+                      //   dense: true,
+                      //   title: "Diskon 20%",
+                      //   textStylePrefix:
+                      //       const TextStyle(color: Colors.redAccent),
+                      //   iconSvg: SvgPicture.asset(
+                      //       "assert/image/icons/discount-icon.svg",
+                      //       height: 24.0),
+                      //   onPressed: () {},
+                      // ),
                       TileListDMenu(
                         dense: true,
                         title: "Pembayaran",

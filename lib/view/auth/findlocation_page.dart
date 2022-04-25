@@ -56,6 +56,7 @@ class _FindLocationPageState extends State<FindLocationPage> {
 
   @override
   void initState() {
+    notifHandling();
     _startTime();
     super.initState();
   }

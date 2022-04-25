@@ -12,14 +12,23 @@ class ListOrder {
   ListOrder({
     required this.statusCode,
     required this.data,
+    required this.totalPrice,
+    required this.totalOrder,
   });
 
   final int statusCode;
   final List<Order> data;
+  final int totalPrice;
+  final int totalOrder;
 
   factory ListOrder.fromJson(Map<String, dynamic> json) => ListOrder(
         statusCode: json["status_code"],
-        data: List<Order>.from(json["data"].map((x) => Order.fromJson(x))),
+        data: List<Order>.from(
+            json["data"]['listData'].map((x) => Order.fromJson(x))),
+        totalPrice: json["data"]['totalPrice'] == null
+            ? 0
+            : int.parse(json["data"]['totalPrice'].toString()),
+        totalOrder: json["data"]['totalOrder'] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -54,7 +63,7 @@ class Order {
         noStruk: json["no_struk"] ?? '',
         nama: json["nama"] ?? '',
         totalBayar: json["total_bayar"],
-        tglDatetime: DateTime.parse(json["created_at"]),
+        tglDatetime: DateTime.parse(json["created_at"].toString()),
         tgl: json['tanggal'],
         status: json["status"],
         menu: List<Menu>.from(json["menu"].map((x) => Menu.fromJson(x))),
@@ -98,7 +107,7 @@ class Menu {
         nama: json["nama"] ?? '',
         foto: json["foto"] ?? '',
         jumlah: json["jumlah"] ?? 0,
-        harga: json["harga"] ?? '',
+        harga: json["harga"] == null ? '' : json["harga"].toString(),
         total: json["total"] ?? 0,
         catatan: json["catatan"] ?? '',
       );

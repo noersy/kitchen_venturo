@@ -103,7 +103,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    notifHandling();
     _checkInternet();
     super.initState();
   }

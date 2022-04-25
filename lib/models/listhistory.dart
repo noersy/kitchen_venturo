@@ -20,13 +20,13 @@ class ListHistory {
   });
 
   final int statusCode;
-  final List<Order> data;
+  final List<History> data;
   final int totalPrice;
   final int totalOrder;
 
   factory ListHistory.fromJson(Map<String, dynamic> json) => ListHistory(
         statusCode: json["status_code"],
-        data: List<Order>.from(
+        data: List<History>.from(
             json["data"]['listData'].map((x) => History.fromJson(x))),
         totalPrice: json["data"]['totalPrice'] ?? 0,
         totalOrder: json["data"]['totalOrder'] ?? 0,

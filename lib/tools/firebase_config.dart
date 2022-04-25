@@ -114,11 +114,11 @@ onDidReceiveLocalNotification(
 
 onNotifClicked(navigatorKey, String dataJson) async {
   var data = jsonDecode(dataJson);
-  String goTo = data['goTo'];
+  String goTo = data['go_to'];
 
   switch (goTo.toLowerCase()) {
     case 'detail_order':
-      Order dataOrder = Order.fromJson(data['data_order']);
+      Order dataOrder = Order.fromJson(jsonDecode(data['data']));
       Navigate().nextPage(
         navigatorKey.currentContext,
         DetailOrder(dataOrder: dataOrder),

@@ -169,27 +169,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: 'Email',
                                 suffix: 'lorem.ipsum@gmail.com',
                               ),
-                              TileListProfile(
-                                title: '${lang.profile.ub} PIN',
-                                suffix: '*********',
-                                onPreseed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (_) => VPinDialog(
-                                      title: lang.profile.lm,
-                                      onComplete: (_) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (_) => VPinDialog(
-                                            title: lang.profile.br,
-                                            onComplete: (_) {},
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
+                              // TileListProfile(
+                              //   title: '${lang.profile.ub} PIN',
+                              //   suffix: '*********',
+                              //   onPreseed: () {
+                              //     showDialog(
+                              //       context: context,
+                              //       builder: (_) => VPinDialog(
+                              //         title: lang.profile.lm,
+                              //         onComplete: (_) {
+                              //           showDialog(
+                              //             context: context,
+                              //             builder: (_) => VPinDialog(
+                              //               title: lang.profile.br,
+                              //               onComplete: (_) {},
+                              //             ),
+                              //           );
+                              //         },
+                              //       ),
+                              //     );
+                              //   },
+                              // ),
                               AnimatedBuilder(
                                 animation: LangProviders(),
                                 builder: (context, snapshot) {

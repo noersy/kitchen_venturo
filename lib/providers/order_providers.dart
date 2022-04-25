@@ -43,7 +43,6 @@ class OrderProviders extends ChangeNotifier {
       _isNetworkError = status;
       notifyListeners();
       if (context != null) {
-        _isNetworkError = false;
         notifyListeners();
         Navigate.toOfflinePage(
           context,
@@ -118,7 +117,7 @@ class OrderProviders extends ChangeNotifier {
     if (_isNetworkError!) return false;
     try {
       final _api = Uri.http(host, "$sub/api/order/all");
-      final response = await http.get(
+      final response = await http.post(
         _api,
         headers: await getHeader(),
       );
@@ -147,14 +146,15 @@ class OrderProviders extends ChangeNotifier {
         title: 'Koneksi time out.',
       );
       return false;
-    } catch (e) {
-      setNetworkError(
-        true,
-        context: context,
-        title: 'Terjadi masalah dengan server.',
-      );
-      return false;
     }
+    // catch (e) {
+    //   setNetworkError(
+    //     true,
+    //     context: context,
+    //     title: 'Terjadi masalah dengan server.',
+    //   );
+    //   return false;
+    // }
   }
 
   Future<bool> getListHistory(BuildContext context) async {
@@ -189,14 +189,15 @@ class OrderProviders extends ChangeNotifier {
         title: 'Koneksi time out.',
       );
       return false;
-    } catch (e) {
-      setNetworkError(
-        true,
-        context: context,
-        title: 'Terjadi masalah dengan server.',
-      );
-      return false;
     }
+    // catch (e) {
+    //   setNetworkError(
+    //     true,
+    //     context: context,
+    //     title: 'Terjadi masalah dengan server.',
+    //   );
+    //   return false;
+    // }
   }
 
   Future<bool> postUpdateStatus(BuildContext context, status, idOrder) async {
@@ -240,17 +241,18 @@ class OrderProviders extends ChangeNotifier {
         title: 'Koneksi time out.',
       );
       return false;
-    } catch (e) {
-      setNetworkError(
-        true,
-        context: context,
-        title: 'Terjadi masalah dengan server.',
-      );
-      return false;
     }
+    // catch (e) {
+    //   setNetworkError(
+    //     true,
+    //     context: context,
+    //     title: 'Terjadi masalah dengan server.',
+    //   );
+    //   return false;
+    // }
   }
 
-  Future<ListHistory?> getOrderLimit(
+  Future<ListOrder?> getOrderLimit(
     BuildContext context,
     limit,
     start,
@@ -277,10 +279,10 @@ class OrderProviders extends ChangeNotifier {
       if (response.statusCode == 200 &&
           json.decode(response.body)["status_code"] == 200) {
         await setNetworkError(false);
-        return listHistoryFromJson(response.body);
-      } else {
-        return null;
+        ListOrder listOrder = listOrderFromJson(response.body);
+        return listOrder;
       }
+      return null;
     } on SocketException {
       setNetworkError(
         true,
@@ -295,13 +297,14 @@ class OrderProviders extends ChangeNotifier {
         title: 'Koneksi time out.',
       );
       return null;
-    } catch (e) {
-      setNetworkError(
-        true,
-        context: context,
-        title: 'Terjadi masalah dengan server.',
-      );
-      return null;
     }
+    // catch (e) {
+    //   setNetworkError(
+    //     true,
+    //     context: context,
+    //     title: 'Terjadi masalah dengan server.',
+    //   );
+    //   return null;
+    // }
   }
 }

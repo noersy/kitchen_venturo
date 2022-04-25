@@ -107,7 +107,7 @@ class _HistoryPageState extends State<HistoryPage> {
   getMoredata() async {
     if (mounted) {
       setState(() => _loadingLoadMore = true);
-      ListHistory? dataOrder =
+      ListOrder? dataOrder =
           await Provider.of<OrderProviders>(context, listen: false)
               .getOrderLimit(
         context,
@@ -135,7 +135,7 @@ class _HistoryPageState extends State<HistoryPage> {
     if (mounted) {
       setState(() => _loading = true);
 
-      ListHistory? dataOrder =
+      ListOrder? dataOrder =
           await Provider.of<OrderProviders>(context, listen: false)
               .getOrderLimit(
         context,
@@ -148,10 +148,12 @@ class _HistoryPageState extends State<HistoryPage> {
       Timer(_duration, () {
         if (mounted) {
           setState(() {
-            _orders = dataOrder!.data;
-            _data = dataOrder.data;
-            totalHistory = dataOrder.totalOrder;
-            totalPrice = dataOrder.totalPrice;
+            if (dataOrder != null) {
+              _orders = dataOrder.data;
+              _data = dataOrder.data;
+              totalHistory = dataOrder.totalOrder;
+              totalPrice = dataOrder.totalPrice;
+            }
             _loading = false;
           });
         }
